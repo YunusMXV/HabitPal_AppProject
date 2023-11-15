@@ -1,4 +1,6 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:habitpal_project/Screens/login.dart';
 //import 'package:habitpal_project/Screens/Home.dart';
 //import 'package:habitpal_project/widgets/BottomNav.dart';
 
@@ -21,6 +23,18 @@ class _SettingsState extends State<Settings> {
             Navigator.pop(context);
           },
           icon: const Icon(Icons.arrow_back),
+        ),
+      ),
+      body: Center(
+        child: ElevatedButton(
+          child: const Text("Logout"),
+          onPressed: () {
+            FirebaseAuth.instance.signOut().then((value) {
+              print("Signed Out");
+              Navigator.push(context,
+                  MaterialPageRoute(builder: (context) => const LogInScreen()));
+            });
+          },
         ),
       ),
     );

@@ -1,0 +1,54 @@
+{
+  "project_info": {
+    "project_number": "141426942084",
+    "project_id": "project1-bdc1b",
+    "storage_bucket": "project1-bdc1b.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:141426942084:android:5271d3df3204d6bb0222d1",
+        "android_client_info": {
+          "package_name": "com.example.habitpal_project"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "141426942084-f93nq61la7pl8el16323gf5uudv592hd.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.habitpal_project",
+            "certificate_hash": "3e06dca3ad22d7baab9a2778e86bf87937c29fa8"
+          }
+        },
+        {
+          "client_id": "141426942084-ffvqitcebqjma89bcmq5lh5l068bs1pj.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyA1Sxtx41BJdP7LPPRPVTUpStdcy6_vvjg"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "141426942084-ffvqitcebqjma89bcmq5lh5l068bs1pj.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "141426942084-acu11v5bf6d3ubvkrn8alvu3solbls7o.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.example.habitpalProject.RunnerTests"
+              }
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

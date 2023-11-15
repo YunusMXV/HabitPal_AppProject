@@ -29,7 +29,7 @@ class Home extends StatelessWidget {
         ],
       ),
       body: ListView.builder(
-        itemCount: 2,
+        itemCount: 1,
         itemBuilder: (context, index) => const Habit(),
       ),
 
