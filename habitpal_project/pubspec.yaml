@@ -41,6 +41,7 @@ dependencies:
   firebase_ui_auth: ^1.9.1
   flutter_native_splash: ^2.3.5
   google_sign_in: ^6.1.6
+  ionicons: ^0.2.2
 
 dev_dependencies:
   flutter_test:

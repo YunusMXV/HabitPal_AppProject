@@ -7,7 +7,7 @@ import 'package:habitpal_project/widgets/UI_Buttons.dart';
 import 'package:habitpal_project/Screens/signup.dart';
 import 'package:habitpal_project/widgets/image_widget.dart';
 import 'package:habitpal_project/Screens/forgot_password.dart';
-//import 'package:habitpal_project/widgets/google_sign_in.dart';
+import 'package:habitpal_project/widgets/google_sign_in.dart';
 import 'package:habitpal_project/widgets/password_fields.dart';
 
 class LogInScreen extends StatefulWidget {
@@ -93,11 +93,11 @@ class _LogInScreenState extends State<LogInScreen> {
                   padding: const EdgeInsets.symmetric(horizontal : 40.0),
                   child: ElevatedButton(
                     onPressed: () async {
-                      // signInWithGoogle().then((value){
-                      //   Navigator.push(context, MaterialPageRoute(builder: ((context) => const Home())));
-                      // }).onError((error, stackTrace) {
-                      //   print("Error ${error.toString()}");
-                      // });
+                      signInWithGoogle().then((value){ //using this
+                        Navigator.push(context, MaterialPageRoute(builder: ((context) => const Home())));
+                      }).onError((error, stackTrace) {
+                        print("Error ${error.toString()}");
+                      });
                     },
                     style: ButtonStyle(
                         backgroundColor: MaterialStateProperty.resolveWith((states) {

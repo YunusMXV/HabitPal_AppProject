@@ -6,7 +6,6 @@ import 'package:habitpal_project/widgets/Text_Fields.dart';
 import 'package:habitpal_project/widgets/UI_Buttons.dart';
 import 'package:habitpal_project/widgets/image_widget.dart';
 import 'package:habitpal_project/widgets/password_fields.dart';
-import 'package:habitpal_project/Screens/login.dart';
 
 class SignUpScreen extends StatefulWidget {
   const SignUpScreen({Key? key}) : super(key: key);
@@ -34,6 +33,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
           "Sign Up",
           style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
         ),
+        centerTitle: true,
       ),
       body: Container(
         width: MediaQuery.of(context).size.width,
