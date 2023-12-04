@@ -1,18 +1,20 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:habitpal_project/utils/color_utils.dart';
 import 'package:habitpal_project/widgets/Text_Fields.dart';
 import 'package:habitpal_project/widgets/UI_Buttons.dart';
+import 'package:habitpal_project/features/auth/controller/auth_controller.dart';
 
 
-class ResetPassword extends StatefulWidget {
+class ResetPassword extends ConsumerStatefulWidget {
   const ResetPassword({Key? key}) : super(key: key);
 
   @override
-  _ResetPasswordState createState() => _ResetPasswordState();
+  ConsumerState<ResetPassword> createState() => _ResetPasswordState();
 }
 
-class _ResetPasswordState extends State<ResetPassword> {
+class _ResetPasswordState extends ConsumerState<ResetPassword> {
   final TextEditingController _emailTextController = TextEditingController();
   @override
   Widget build(BuildContext context) {
@@ -22,8 +24,8 @@ class _ResetPasswordState extends State<ResetPassword> {
         backgroundColor: Colors.transparent,
         elevation: 0,
         title: const Text(
-          "Reset Password",
-          style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+          "Forgot Password",
+          style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold, color: Colors.white),
         ),
       ),
       body: Container(
@@ -49,9 +51,15 @@ class _ResetPasswordState extends State<ResetPassword> {
                   height: 20,
                 ),
                 reusableUIButton(context, "Reset Password", 0, () {
-                  FirebaseAuth.instance
-                      .sendPasswordResetEmail(email: _emailTextController.text)
-                      .then((value) => Navigator.of(context).pop());
+                  try {
+                    ref.read(authControllerProvider.notifier).forgotPassword(
+                                context,
+                                _emailTextController.text,
+                              );
+                    Navigator.pop(context);
+                  } catch (e) {
+                    print("Error: $e");
+                  }
                 })
               ],
             ),

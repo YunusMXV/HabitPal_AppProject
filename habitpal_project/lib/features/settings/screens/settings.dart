@@ -1,21 +1,37 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:habitpal_project/Screens/login.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:habitpal_project/features/auth/controller/auth_controller.dart';
+import 'package:habitpal_project/features/auth/screens/login.dart';
+import 'package:habitpal_project/router.dart';
 import 'package:habitpal_project/widgets/settings_tile.dart';
 import 'package:ionicons/ionicons.dart';
 import 'package:habitpal_project/utils/color_utils.dart';
+import 'package:routemaster/routemaster.dart';
+import 'package:habitpal_project/features/settings/screens/change_password.dart';
+import 'package:habitpal_project/features/settings/screens/change_email.dart';
+import 'package:habitpal_project/features/settings/screens/change_username.dart';
+
 //import 'package:habitpal_project/Screens/Home.dart';
 
-class Settings extends StatefulWidget {
+class Settings extends ConsumerStatefulWidget {
   const Settings({super.key});
 
   @override
-  State<Settings> createState() => _SettingsState();
+  ConsumerState<Settings> createState() => _SettingsState();
+
 }
 
-class _SettingsState extends State<Settings> {
+class _SettingsState extends ConsumerState<Settings> {
   @override
   Widget build(BuildContext context) {
+
+    void logOut(WidgetRef ref) async {
+      ref.read(authControllerProvider.notifier).logout();
+
+      //ref.read(userProvider.notifier).update((state) => null);
+    }
+    
     return Scaffold(
       extendBodyBehindAppBar: true,
       appBar: AppBar(
@@ -69,7 +85,14 @@ class _SettingsState extends State<Settings> {
                   color: Colors.white,
                   icon: Ionicons.person_circle_outline,
                   title: "Change Username",
-                  onTap: () {},
+                  onTap: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => const ChangeUsername(),
+                      ),
+                    );
+                  },
                 ),
                 const SizedBox(
                   height: 10,
@@ -78,7 +101,14 @@ class _SettingsState extends State<Settings> {
                   color: Colors.white,
                   icon: Ionicons.mail_outline,
                   title: "Change Email",
-                  onTap: () {},
+                  onTap: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => const ChangeEmail(),
+                      ),
+                    );
+                  },
                 ),
                 const SizedBox(
                   height: 10,
@@ -87,7 +117,14 @@ class _SettingsState extends State<Settings> {
                   color: Colors.white,
                   icon: Ionicons.lock_closed_outline,
                   title: "Change Password",
-                  onTap: () {},
+                  onTap: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => const ChangePassword(),
+                      ),
+                    );
+                  },
                 ),
                 const SizedBox(
                   height: 10,
@@ -232,11 +269,9 @@ class _SettingsState extends State<Settings> {
                   color: Colors.red,
                   icon: Ionicons.log_out_outline,
                   title: "Log Out",
-                  onTap: () {
-                    FirebaseAuth.instance.signOut().then((value) {
-                      print("Signed Out");
-                      Navigator.push(context, MaterialPageRoute(builder: (context) => const LogInScreen()));
-                    });
+                  onTap: () async {
+                    logOut(ref);
+                    Routemaster.of(context).replace('/');
                   },
                 ),
               ],

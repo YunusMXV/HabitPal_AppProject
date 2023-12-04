@@ -1,31 +1,35 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:habitpal_project/Screens/Home.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:habitpal_project/features/home/screens/Home.dart';
 import 'package:habitpal_project/utils/color_utils.dart';
 import 'package:habitpal_project/widgets/Text_Fields.dart';
 import 'package:habitpal_project/widgets/UI_Buttons.dart';
-import 'package:habitpal_project/Screens/signup.dart';
+import 'package:habitpal_project/features/auth/screens/signup.dart';
 import 'package:habitpal_project/widgets/image_widget.dart';
-import 'package:habitpal_project/Screens/forgot_password.dart';
+import 'package:habitpal_project/features/auth/screens/forgot_password.dart';
 import 'package:habitpal_project/widgets/google_sign_in.dart';
 import 'package:habitpal_project/widgets/password_fields.dart';
+import 'package:habitpal_project/features/auth/controller/auth_controller.dart';
+import 'package:habitpal_project/widgets/loader.dart';
 
-class LogInScreen extends StatefulWidget {
+class LogInScreen extends ConsumerStatefulWidget {
   const LogInScreen({super.key});
 
   @override
-  State<LogInScreen> createState() => _LogInScreenState();
+  ConsumerState<LogInScreen> createState() => _LogInScreenState();
 }
 
-class _LogInScreenState extends State<LogInScreen> {
+class _LogInScreenState extends ConsumerState<LogInScreen> {
   final TextEditingController _passwordTextController = TextEditingController();
   final TextEditingController _emailTextController = TextEditingController();
   late final PasswordField passwordField = PasswordField(controller: _passwordTextController, labelText: "Password",);
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context) { //vid mein yahan (BuildContext context, WidgetRef ref) daala tha
+    //final isLoading = ref.watch(authControllerProvider);
     return Scaffold(
-      body: Container(
+      body: Container( //body: isLoading ? const Loader() : Container(
         width: MediaQuery.of(context).size.width,
         height: MediaQuery.of(context).size.height,
         decoration: BoxDecoration(
@@ -46,9 +50,9 @@ class _LogInScreenState extends State<LogInScreen> {
                 imageWidget("assets/images/Login.png", 240.0),
                 const SizedBox(height: 30.0),
                 reusableTextField(
-                  "Enter Username", 
+                  "Enter Email", 
                   Icons.person_outline, 
-                  false, 
+                  false,
                   _emailTextController
                 ),
                 const SizedBox(height: 30.0),
@@ -73,15 +77,19 @@ class _LogInScreenState extends State<LogInScreen> {
                       ),
                       Expanded(
                         child: reusableUIButton(
-                          context, "Log In", 250, () {
-                            FirebaseAuth.instance.signInWithEmailAndPassword(
-                              email: _emailTextController.text, 
-                              password: _passwordTextController.text
-                            ).then((value) {
-                              Navigator.push(context, MaterialPageRoute(builder: ((context) => const Home())));
-                            }).onError((error, stackTrace) {
-                              print("Error ${error.toString()}");
-                            });
+                          context, "Log In", 250, () async {
+                            try {
+                              ref.read(authControllerProvider.notifier).signInWithEmail(
+                                context,
+                                _emailTextController.text,
+                                _passwordTextController.text,
+                              );
+                              // print("Signed In Successfully");
+                              // // Navigate to the home screen or perform other actions on successful sign-in
+                              // Navigator.push(context, MaterialPageRoute(builder: ((context) => const Home())));
+                            } catch (e) {
+                              print("Error: $e");
+                            }
                           }
                         ),
                       ),
@@ -89,48 +97,7 @@ class _LogInScreenState extends State<LogInScreen> {
                   ),
                 ),
                 const SizedBox(height: 10.0),
-                Padding(
-                  padding: const EdgeInsets.symmetric(horizontal : 40.0),
-                  child: ElevatedButton(
-                    onPressed: () async {
-                      signInWithGoogle().then((value){ //using this
-                        Navigator.push(context, MaterialPageRoute(builder: ((context) => const Home())));
-                      }).onError((error, stackTrace) {
-                        print("Error ${error.toString()}");
-                      });
-                    },
-                    style: ButtonStyle(
-                        backgroundColor: MaterialStateProperty.resolveWith((states) {
-                      if (states.contains(MaterialState.pressed)) {
-                        return Colors.black26;
-                      }
-                      return Colors.white;
-                    })),
-                    child: Padding(
-                      padding: const EdgeInsets.all(8.0),
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          Image.asset(
-                            "assets/images/google.png",
-                            height: 32,
-                            width: 32,
-                          ),
-                          const SizedBox(
-                            width: 10,
-                          ),
-                          const Text(
-                            "Login with Gmail",
-                            style: TextStyle(
-                                fontSize: 16,
-                                fontWeight: FontWeight.bold,
-                                color: Colors.black87),
-                          ),
-                        ],
-                      ),
-                    ),
-                  ),
-                ),
+                const GoogleSignInButton(),
                 const SizedBox(height: 20.0),
                 Row(
                   mainAxisAlignment: MainAxisAlignment.center,

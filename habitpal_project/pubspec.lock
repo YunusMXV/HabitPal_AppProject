@@ -13,10 +13,10 @@ packages:
     dependency: transitive
     description:
       name: _flutterfire_internals
-      sha256: "8942974ee5dc932427704ede5e0db8b5f2b8f22172964544b56e6bd37f6c3634"
+      sha256: dd68ecea9f1e3556d385521bd21c7bafd6311a8c1e11abe2595ca27974f468ee
       url: "https://pub.dev"
     source: hosted
-    version: "1.3.12"
+    version: "1.3.13"
   analyzer:
     dependency: transitive
     description:
@@ -137,6 +137,14 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "1.0.6"
+  curved_navigation_bar:
+    dependency: "direct main"
+    description:
+      name: curved_navigation_bar
+      sha256: ea6412d00c5d83501bbf1cf9d1ac2ff11a20fbaf910c103c95ace7de82910334
+      url: "https://pub.dev"
+    source: hosted
+    version: "1.0.3"
   desktop_webview_auth:
     dependency: transitive
     description:
@@ -197,10 +205,10 @@ packages:
     dependency: "direct main"
     description:
       name: firebase_core
-      sha256: "45f3f9babfc6f56fb94c3cd11584cf3c9672868228373b699b94427010e01dc3"
+      sha256: "471b46ea6a9af503184d4de691566887daedd312aec5baac5baa42d819f56446"
       url: "https://pub.dev"
     source: hosted
-    version: "2.22.0"
+    version: "2.23.0"
   firebase_core_platform_interface:
     dependency: transitive
     description:
@@ -233,6 +241,30 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "0.2.6+12"
+  firebase_storage:
+    dependency: "direct main"
+    description:
+      name: firebase_storage
+      sha256: "4fd6b8ff3db962512503bd0ea4df0cfb0ed6f7c8549c16e8b9f5f51cef68a23b"
+      url: "https://pub.dev"
+    source: hosted
+    version: "11.5.2"
+  firebase_storage_platform_interface:
+    dependency: transitive
+    description:
+      name: firebase_storage_platform_interface
+      sha256: c9988b196fd0d298dde89d22b3fd4e1bb69ef284717394ba3d7190565b9554fa
+      url: "https://pub.dev"
+    source: hosted
+    version: "5.1.0"
+  firebase_storage_web:
+    dependency: transitive
+    description:
+      name: firebase_storage_web
+      sha256: a4370c1432b11381440352116fff10e07af39d504629de7fba4627fb5aeeecdd
+      url: "https://pub.dev"
+    source: hosted
+    version: "3.6.14"
   firebase_ui_auth:
     dependency: "direct main"
     description:
@@ -291,6 +323,14 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "2.3.5"
+  flutter_riverpod:
+    dependency: "direct main"
+    description:
+      name: flutter_riverpod
+      sha256: d261b0f2461e0595b96f92ed807841eb72cea84a6b12b8fd0c76e5ed803e7921
+      url: "https://pub.dev"
+    source: hosted
+    version: "2.4.8"
   flutter_svg:
     dependency: transitive
     description:
@@ -309,6 +349,14 @@ packages:
     description: flutter
     source: sdk
     version: "0.0.0"
+  fpdart:
+    dependency: "direct main"
+    description:
+      name: fpdart
+      sha256: "7413acc5a6569a3fe8277928fc7487f3198530f0c4e635d0baef199ea36e8ee9"
+      url: "https://pub.dev"
+    source: hosted
+    version: "1.1.0"
   glob:
     dependency: transitive
     description:
@@ -525,6 +573,22 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "3.2.1"
+  riverpod:
+    dependency: transitive
+    description:
+      name: riverpod
+      sha256: "08451ddbaad6eae73e2422d8109775885623340d721c6637b8719c9f4b478848"
+      url: "https://pub.dev"
+    source: hosted
+    version: "2.4.8"
+  routemaster:
+    dependency: "direct main"
+    description:
+      name: routemaster
+      sha256: b3b10b6ee31c741b453091e6b33323cc96631b19e4a14fc6069e9de056c7311c
+      url: "https://pub.dev"
+    source: hosted
+    version: "1.0.1"
   sky_engine:
     dependency: transitive
     description: flutter
@@ -546,6 +610,14 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "1.11.0"
+  state_notifier:
+    dependency: transitive
+    description:
+      name: state_notifier
+      sha256: b8677376aa54f2d7c58280d5a007f9e8774f1968d1fb1c096adcb4792fba29bb
+      url: "https://pub.dev"
+    source: hosted
+    version: "1.0.0"
   stream_channel:
     dependency: transitive
     description:

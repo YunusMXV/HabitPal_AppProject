@@ -1,7 +1,8 @@
+import 'package:curved_navigation_bar/curved_navigation_bar.dart';
 import 'package:flutter/material.dart';
-import 'package:habitpal_project/Screens/settings.dart';
+import 'package:habitpal_project/utils/color_utils.dart';
+import 'package:routemaster/routemaster.dart';
 // import 'package:habitpal_project/Screens/Home.dart';
-import 'package:habitpal_project/Screens/Achievments.dart';
 
 class BottomNav extends StatefulWidget {
   const BottomNav({super.key});
@@ -11,48 +12,41 @@ class BottomNav extends StatefulWidget {
 }
 
 class _BottomNavState extends State<BottomNav> {
+
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-        bottomNavigationBar: BottomNavigationBar(
-      items: [
-        BottomNavigationBarItem(
-          icon: IconButton(
-              onPressed: () {
-                // ignore: prefer_const_constructors
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                    builder: (context) => const Settings(),
-                  ),
-                );
-              },
-              icon: const Icon(Icons.settings)),
-          label: 'Settings',
-        ),
-        BottomNavigationBarItem(
-          icon: IconButton(
-              onPressed: () {
-                // ignore: prefer_const_constructors
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                    builder: (context) => const Acheivment(),
-                  ),
-                );
-              },
-              icon: const Icon(Icons.rocket)),
-          label: 'Acheivments',
-        ),
-      ],
-      currentIndex: 0,
-      onTap: (index) {
-        if (index == 1) {
-          Navigator.pushNamed(context, '/Setting');
-        } else if (index == 2) {
-          Navigator.pushNamed(context, '/achievement');
-        }
-      },
-    ));
+    return CurvedNavigationBar(
+        backgroundColor: Colors.transparent,
+        color: Colors.black,
+        animationDuration: const Duration(milliseconds: 200),
+        onTap: (index) {
+          print(index);
+          switch (index) {
+            case 0:
+              Routemaster.of(context).replace('/');
+              break;
+            case 1:
+              Routemaster.of(context).replace('/history');
+              break;
+            case 2:
+              Routemaster.of(context).replace('/achievement');
+            break;
+          }
+        },
+        items: const [
+          Icon(
+            Icons.home,
+            color: Colors.white
+          ),
+          Icon(
+            Icons.history,
+            color: Colors.white
+          ),
+          Icon(
+            Icons.rocket,
+            color: Colors.white
+          ),
+        ],
+    );
   }
 }

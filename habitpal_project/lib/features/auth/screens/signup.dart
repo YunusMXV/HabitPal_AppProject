@@ -1,20 +1,21 @@
 import 'package:flutter/material.dart';
-import 'package:habitpal_project/Screens/Home.dart';
-import 'package:firebase_auth/firebase_auth.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:habitpal_project/features/home/screens/Home.dart';
 import 'package:habitpal_project/utils/color_utils.dart';
 import 'package:habitpal_project/widgets/Text_Fields.dart';
 import 'package:habitpal_project/widgets/UI_Buttons.dart';
 import 'package:habitpal_project/widgets/image_widget.dart';
 import 'package:habitpal_project/widgets/password_fields.dart';
+import 'package:habitpal_project/features/auth/controller/auth_controller.dart';
 
-class SignUpScreen extends StatefulWidget {
+class SignUpScreen extends ConsumerStatefulWidget {
   const SignUpScreen({Key? key}) : super(key: key);
 
   @override
-  _SignUpScreenState createState() => _SignUpScreenState();
+  ConsumerState<SignUpScreen> createState() => _SignUpScreenState();
 }
 
-class _SignUpScreenState extends State<SignUpScreen> {
+class _SignUpScreenState extends ConsumerState<SignUpScreen> {
   final TextEditingController _passwordTextController = TextEditingController();
   final TextEditingController _confirmedpasswordTextController = TextEditingController();
   final TextEditingController _emailTextController = TextEditingController();
@@ -31,7 +32,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
         elevation: 0,
         title: const Text(
           "Sign Up",
-          style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+          style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold,  color: Colors.white),
         ),
         centerTitle: true,
       ),
@@ -73,30 +74,43 @@ class _SignUpScreenState extends State<SignUpScreen> {
                 ),
                 reusableUIButton(context, "Sign Up", 0, () {
                   if (_passwordTextController.text == _confirmedpasswordTextController.text) {
-                    FirebaseAuth.instance
-                        .createUserWithEmailAndPassword(
-                            email: _emailTextController.text,
-                            password: _passwordTextController.text)
-                        .then((value) {
-                      print("Created New Account");
-                      Navigator.push(context,
-                          MaterialPageRoute(builder: (context) => const Home()));
-                    }).onError((error, stackTrace) {
-                      print("Error ${error.toString()}");
-                    });
-                  } else {
+                    try {     
+                      ref.read(authControllerProvider.notifier).signUpWithEmail(
+                        context, 
+                        _emailTextController.text, 
+                        _passwordTextController.text,
+                        _userNameTextController.text,
+                      );
+                      AlertDialog(
+                        title: const Text("Account Created"),
+                        actions: [
+                          TextButton(
+                            onPressed: () {
+                              Navigator.pop(context);
+                            },
+                            child: const Text("OK"),
+                          ),
+                        ],
+                      );
+                      print("Created New Account with Username: ${_userNameTextController.text}");
+                      Navigator.pop(context);
+                    } catch (e) {
+                      print("Error ${e.toString()}");
+                    } 
+                  }
+                  else {
                     showDialog(
                       context: context,
                       builder: (BuildContext context) {
                         return AlertDialog(
-                          title: Text("Error"),
-                          content: Text("Password and Confirm Password do not match."),
+                          title: const Text("Error"),
+                          content: const Text("Password and Confirm Password do not match."),
                           actions: [
                             TextButton(
                               onPressed: () {
                                 Navigator.pop(context);
                               },
-                              child: Text("OK"),
+                              child: const Text("OK"),
                             ),
                           ],
                         );
@@ -128,3 +142,4 @@ class _SignUpScreenState extends State<SignUpScreen> {
     );
   }
 }
+
