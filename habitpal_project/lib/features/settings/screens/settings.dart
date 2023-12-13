@@ -44,7 +44,7 @@ class _SettingsState extends ConsumerState<Settings> {
         centerTitle: true,
         leading: IconButton(
           onPressed: () {
-            Navigator.pop(context);
+            Routemaster.of(context).pop();
           },
           icon: const Icon(Icons.arrow_back, color: Colors.white,),
         ),
@@ -271,7 +271,7 @@ class _SettingsState extends ConsumerState<Settings> {
                   title: "Log Out",
                   onTap: () async {
                     logOut(ref);
-                    Routemaster.of(context).replace('/');
+                    Routemaster.of(context).pop();
                   },
                 ),
               ],

@@ -25,7 +25,7 @@ class _HistoryState extends State<History> {
         actions: [
           IconButton(
             onPressed: () {
-              Routemaster.of(context).replace('/settings');
+              Routemaster.of(context).push('/settings');
             },
             icon: const Icon(
               Icons.settings,
@@ -33,10 +33,11 @@ class _HistoryState extends State<History> {
             ),
           ),
         ],
+        automaticallyImplyLeading: false,
         centerTitle: true,
         title: const Text(
           "History",
-          style: const TextStyle(fontSize: 20, fontWeight: FontWeight.bold, color: Colors.white),
+          style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold, color: Colors.white),
         )
       ),
       body: Container(

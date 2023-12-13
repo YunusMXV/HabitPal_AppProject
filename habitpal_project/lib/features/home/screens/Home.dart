@@ -16,7 +16,7 @@ class Home extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final user = ref.watch(userProvider);
-    print(user);
+    //print(user);
     return Scaffold(
       extendBodyBehindAppBar: true,
       extendBody: true,
@@ -26,7 +26,7 @@ class Home extends ConsumerWidget {
         actions: [
           IconButton(
             onPressed: () {
-              Routemaster.of(context).replace('/settings');
+              Routemaster.of(context).push('/settings');
             },
             icon: const Icon(
               Icons.settings,
@@ -71,9 +71,9 @@ class Home extends ConsumerWidget {
               ),
             ],
           ),
-        )
+        ),
       ),
-      bottomNavigationBar: const BottomNav(),
+      bottomNavigationBar: BottomNav(),
     );
   }
 }

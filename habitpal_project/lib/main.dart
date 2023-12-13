@@ -58,7 +58,7 @@ class _MyAppState extends ConsumerState<MyApp> {
               getData(ref, data);
               //print("...............................B: $userModel");
               if (userModel != null) {
-                print("...............................C:");
+                //print("...............................C:");
                 //print("...............................C: $userModel");
                 return loggedInRoute;
               }
@@ -66,7 +66,7 @@ class _MyAppState extends ConsumerState<MyApp> {
             else {
               userModel = null;
             }
-            print("...............................A: $userModel");
+            //print("...............................A: $userModel");
             _loadImages(context).then((_) {
               FlutterNativeSplash.remove();
             });

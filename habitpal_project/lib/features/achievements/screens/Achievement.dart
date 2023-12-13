@@ -23,7 +23,7 @@ class _AchievementState extends State<Achievement> {
         actions: [
           IconButton(
             onPressed: () {
-              Routemaster.of(context).replace('/settings');
+              Routemaster.of(context).push('/settings');
             },
             icon: const Icon(
               Icons.settings,
@@ -31,10 +31,11 @@ class _AchievementState extends State<Achievement> {
             ),
           ),
         ],
+        automaticallyImplyLeading: false,
         centerTitle: true,
         title: const Text(
-          "History",
-          style: const TextStyle(fontSize: 20, fontWeight: FontWeight.bold, color: Colors.white),
+          "Achievements",
+          style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold, color: Colors.white),
         )
       ),
       body: Container(
