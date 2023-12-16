@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:habitpal_project/features/auth/controller/auth_controller.dart';
 import 'package:habitpal_project/features/auth/screens/login.dart';
+import 'package:habitpal_project/features/home/controller/home_controller.dart';
 import 'package:habitpal_project/router.dart';
 import 'package:habitpal_project/widgets/settings_tile.dart';
 import 'package:ionicons/ionicons.dart';
@@ -28,7 +29,7 @@ class _SettingsState extends ConsumerState<Settings> {
 
     void logOut(WidgetRef ref) async {
       ref.read(authControllerProvider.notifier).logout();
-
+      ref.read(selectedIndexProvider.notifier).update((state) => 0);
       //ref.read(userProvider.notifier).update((state) => null);
     }
     
@@ -44,7 +45,10 @@ class _SettingsState extends ConsumerState<Settings> {
         centerTitle: true,
         leading: IconButton(
           onPressed: () {
+            final currentRoute = Routemaster.of(context).currentRoute;
+            print(currentRoute);
             Routemaster.of(context).pop();
+            print(currentRoute);
           },
           icon: const Icon(Icons.arrow_back, color: Colors.white,),
         ),
@@ -271,7 +275,7 @@ class _SettingsState extends ConsumerState<Settings> {
                   title: "Log Out",
                   onTap: () async {
                     logOut(ref);
-                    Routemaster.of(context).pop();
+                    Routemaster.of(context).popUntil((route) => route.path == '/');
                   },
                 ),
               ],

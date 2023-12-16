@@ -25,7 +25,7 @@ class _HistoryState extends State<History> {
         actions: [
           IconButton(
             onPressed: () {
-              Routemaster.of(context).push('/settings');
+              Routemaster.of(context).push('settings');
             },
             icon: const Icon(
               Icons.settings,

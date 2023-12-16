@@ -16,12 +16,13 @@ class _BottomNavState extends ConsumerState<BottomNav> {
 
   @override
   Widget build(BuildContext context) {
+    // IF LOG OUT I WANT TO HAVE THE INDEX AS 0
     final selectedIndex = ref.read(selectedIndexProvider);
     return CurvedNavigationBar(
         index: (selectedIndex),
         backgroundColor: Colors.transparent,
         color: Colors.black,
-        animationDuration: const Duration(milliseconds: 1000),
+        animationDuration: const Duration(milliseconds: 0),
         onTap: (index) {
         ref.read(selectedIndexProvider.notifier).update((state) => index);
 
@@ -49,7 +50,7 @@ class _BottomNavState extends ConsumerState<BottomNav> {
           ),
           Icon(
             Icons.rocket,
-            color: Color.fromARGB(255, 59, 48, 48)
+            color: Colors.white
           ),
         ],
     );
