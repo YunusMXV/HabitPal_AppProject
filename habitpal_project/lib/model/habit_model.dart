@@ -1,61 +1,78 @@
+import 'dart:convert';
+
 import 'package:flutter/foundation.dart';
 
 import 'package:habitpal_project/model/progress_history_model.dart';
-class Habit { //not fixed open to changes, I think we should add weekdays option final Set<DayOfWeek> targetCompletionDays;
+class Habit {
   final String habitId;
+  final String habitTitle;
   final String description;
   final String category;
-  final DateTime targetCompletionDate;
+  final Set<String> targetCompletionDays;
   final List<ProgressEntry> progressHistory;
+  final DateTime completionDeadline;
 
   Habit({
     required this.habitId,
+    required this.habitTitle,
     required this.description,
     required this.category,
-    required this.targetCompletionDate,
+    required this.targetCompletionDays,
     required this.progressHistory,
+    required this.completionDeadline,
   });
 
   Habit copyWith({
     String? habitId,
+    String? habitTitle,
     String? description,
     String? category,
-    DateTime? targetCompletionDate,
+    Set<String>? targetCompletionDays,
     List<ProgressEntry>? progressHistory,
+    DateTime? completionDeadline,
   }) {
     return Habit(
       habitId: habitId ?? this.habitId,
+      habitTitle: habitTitle ?? this.habitTitle,
       description: description ?? this.description,
       category: category ?? this.category,
-      targetCompletionDate: targetCompletionDate ?? this.targetCompletionDate,
+      targetCompletionDays: targetCompletionDays ?? this.targetCompletionDays,
       progressHistory: progressHistory ?? this.progressHistory,
+      completionDeadline: completionDeadline ?? this.completionDeadline,
     );
   }
 
   Map<String, dynamic> toMap() {
     return {
       'habitId': habitId,
+      'habitTitle': habitTitle,
       'description': description,
       'category': category,
-      'targetCompletionDate': targetCompletionDate.millisecondsSinceEpoch,
+      'targetCompletionDays': targetCompletionDays.toList(),
       'progressHistory': progressHistory.map((x) => x.toMap()).toList(),
+      'completionDeadline': completionDeadline.millisecondsSinceEpoch,
     };
   }
 
   factory Habit.fromMap(Map<String, dynamic> map) {
     return Habit(
       habitId: map['habitId'] ?? '',
+      habitTitle: map['habitTitle'] ?? '',
       description: map['description'] ?? '',
       category: map['category'] ?? '',
-      targetCompletionDate: DateTime.fromMillisecondsSinceEpoch(map['targetCompletionDate']),
+      targetCompletionDays: Set<String>.from(map['targetCompletionDays']),
       progressHistory: List<ProgressEntry>.from(map['progressHistory']?.map((x) => ProgressEntry.fromMap(x))),
+      completionDeadline: DateTime.fromMillisecondsSinceEpoch(map['completionDeadline']),
     );
   }
 
+  String toJson() => json.encode(toMap());
+
+  factory Habit.fromJson(String source) => Habit.fromMap(json.decode(source));
 
   @override
   String toString() {
-    return 'Habit(habitId: $habitId, description: $description, category: $category, targetCompletionDate: $targetCompletionDate, progressHistory: $progressHistory)';
+    return 'Habit(habitId: $habitId, habitTitle: $habitTitle, description: $description, category: $category, targetCompletionDays: $targetCompletionDays, progressHistory: $progressHistory, completionDeadline: $completionDeadline)';
   }
 
   @override
@@ -64,18 +81,22 @@ class Habit { //not fixed open to changes, I think we should add weekdays option
   
     return other is Habit &&
       other.habitId == habitId &&
+      other.habitTitle == habitTitle &&
       other.description == description &&
       other.category == category &&
-      other.targetCompletionDate == targetCompletionDate &&
-      listEquals(other.progressHistory, progressHistory);
+      setEquals(other.targetCompletionDays, targetCompletionDays) &&
+      listEquals(other.progressHistory, progressHistory) &&
+      other.completionDeadline == completionDeadline;
   }
 
   @override
   int get hashCode {
     return habitId.hashCode ^
+      habitTitle.hashCode ^
       description.hashCode ^
       category.hashCode ^
-      targetCompletionDate.hashCode ^
-      progressHistory.hashCode;
+      targetCompletionDays.hashCode ^
+      progressHistory.hashCode ^
+      completionDeadline.hashCode;
   }
 }
