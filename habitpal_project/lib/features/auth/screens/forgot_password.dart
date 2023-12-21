@@ -1,10 +1,10 @@
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:habitpal_project/utils/color_utils.dart';
 import 'package:habitpal_project/widgets/Text_Fields.dart';
 import 'package:habitpal_project/widgets/UI_Buttons.dart';
 import 'package:habitpal_project/features/auth/controller/auth_controller.dart';
+import 'package:routemaster/routemaster.dart';
 
 
 class ResetPassword extends ConsumerStatefulWidget {
@@ -24,8 +24,18 @@ class _ResetPasswordState extends ConsumerState<ResetPassword> {
         backgroundColor: Colors.transparent,
         elevation: 0,
         title: const Text(
-          "Forgot Password",
+          'Forgot Password',       
           style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold, color: Colors.white),
+        ),
+        centerTitle: true,
+        leading: IconButton(
+          onPressed: () {
+            final currentRoute = Routemaster.of(context).currentRoute;
+            print(currentRoute);
+            Routemaster.of(context).pop();
+            print(currentRoute);
+          },
+          icon: const Icon(Icons.arrow_back, color: Colors.white,),
         ),
       ),
       body: Container(

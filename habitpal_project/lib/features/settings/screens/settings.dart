@@ -5,6 +5,7 @@ import 'package:habitpal_project/features/auth/controller/auth_controller.dart';
 import 'package:habitpal_project/features/auth/screens/login.dart';
 import 'package:habitpal_project/features/home/controller/home_controller.dart';
 import 'package:habitpal_project/router.dart';
+import 'package:habitpal_project/utils/gradient_themes.dart';
 import 'package:habitpal_project/widgets/settings_tile.dart';
 import 'package:ionicons/ionicons.dart';
 import 'package:habitpal_project/utils/color_utils.dart';
@@ -26,10 +27,18 @@ class Settings extends ConsumerStatefulWidget {
 class _SettingsState extends ConsumerState<Settings> {
   @override
   Widget build(BuildContext context) {
+    final user = ref.watch(userProvider);
+    final currentGradient =
+        user!.selectedTheme == 'Original'
+            ? GradientThemes.originalGradient
+            : user.selectedTheme == 'Natural'
+                ? GradientThemes.naturalGradient
+                : GradientThemes.darkGradient; // Set dark theme gradient
 
     void logOut(WidgetRef ref) async {
       ref.read(authControllerProvider.notifier).logout();
       ref.read(selectedIndexProvider.notifier).update((state) => 0);
+      ref.read(quoteProvider.notifier).update((state) => null);
       //ref.read(userProvider.notifier).update((state) => null);
     }
     
@@ -57,11 +66,8 @@ class _SettingsState extends ConsumerState<Settings> {
         width: MediaQuery.of(context).size.width,
         height: MediaQuery.of(context).size.height,
         decoration: BoxDecoration(
-          gradient: LinearGradient(colors: [
-          hexToColor("315b7d"), // #B4E1C5 to #ABCEAF to #B0DDD9
-          hexToColor("1d4769"), // #315b7d to #1d4769 to #223F57
-          hexToColor("223F57")
-        ], begin: Alignment.topCenter, end: Alignment.bottomCenter)),
+          gradient: currentGradient
+        ),
         child: SingleChildScrollView(
           child: Padding(
             padding: const EdgeInsets.fromLTRB(0, 90, 0, 0),
@@ -90,12 +96,7 @@ class _SettingsState extends ConsumerState<Settings> {
                   icon: Ionicons.person_circle_outline,
                   title: "Change Username",
                   onTap: () {
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                        builder: (context) => const ChangeUsername(),
-                      ),
-                    );
+                    Routemaster.of(context).push("change_username");
                   },
                 ),
                 const SizedBox(
@@ -106,12 +107,7 @@ class _SettingsState extends ConsumerState<Settings> {
                   icon: Ionicons.mail_outline,
                   title: "Change Email",
                   onTap: () {
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                        builder: (context) => const ChangeEmail(),
-                      ),
-                    );
+                    Routemaster.of(context).push("change_email");
                   },
                 ),
                 const SizedBox(
@@ -122,12 +118,7 @@ class _SettingsState extends ConsumerState<Settings> {
                   icon: Ionicons.lock_closed_outline,
                   title: "Change Password",
                   onTap: () {
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                        builder: (context) => const ChangePassword(),
-                      ),
-                    );
+                    Routemaster.of(context).push("change_password");
                   },
                 ),
                 const SizedBox(
@@ -164,7 +155,9 @@ class _SettingsState extends ConsumerState<Settings> {
                   color: Colors.white,
                   icon: Ionicons.pencil_outline,
                   title: "Motivational Quotes",
-                  onTap: () {},
+                  onTap: () {
+                    Routemaster.of(context).push("change_preferences");
+                  },
                 ),
                 const SizedBox(
                   height: 10,
@@ -173,7 +166,9 @@ class _SettingsState extends ConsumerState<Settings> {
                   color: Colors.white,
                   icon: Ionicons.moon_outline,
                   title: "Themes",
-                  onTap: () {},
+                  onTap: () {
+                    Routemaster.of(context).push("change_preferences");
+                  },
                 ),
                 const SizedBox(
                   height: 10,
@@ -182,7 +177,9 @@ class _SettingsState extends ConsumerState<Settings> {
                   color: Colors.white,
                   icon: Ionicons.notifications_circle_outline,
                   title: "Set Reminders",
-                  onTap: () {},
+                  onTap: () {
+                    Routemaster.of(context).push("change_preferences");
+                  },
                 ),
                 const SizedBox(
                   height: 10,

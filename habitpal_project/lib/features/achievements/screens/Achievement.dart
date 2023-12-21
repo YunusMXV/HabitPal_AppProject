@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:habitpal_project/features/achievements/screens/barGraph/bar_graph.dart';
 import 'package:habitpal_project/features/achievements/screens/pieChart/pie_chart.dart';
+import 'package:habitpal_project/features/auth/controller/auth_controller.dart';
 import 'package:habitpal_project/utils/color_utils.dart';
+import 'package:habitpal_project/utils/gradient_themes.dart';
 import 'package:habitpal_project/widgets/BottomNav.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:routemaster/routemaster.dart';
@@ -27,6 +29,13 @@ class _AchievementState extends ConsumerState<Achievement> {
 
   @override
   Widget build(BuildContext context) {
+    final user = ref.watch(userProvider);
+    final currentGradient =
+        user!.selectedTheme == 'Original'
+            ? GradientThemes.originalGradient
+            : user.selectedTheme == 'Natural'
+                ? GradientThemes.naturalGradient
+                : GradientThemes.darkGradient; // Set dark theme gradient
     return Scaffold(
       extendBodyBehindAppBar: true,
       extendBody: true,
@@ -58,11 +67,7 @@ class _AchievementState extends ConsumerState<Achievement> {
         child: Container(
           width: MediaQuery.of(context).size.width,
           decoration: BoxDecoration(
-            gradient: LinearGradient(colors: [
-              hexToColor("315b7d"), // #B4E1C5 to #ABCEAF to #B0DDD9
-              hexToColor("1d4769"), // #315b7d to #1d4769 to #223F57
-              hexToColor("223F57")
-            ], begin: Alignment.topCenter, end: Alignment.bottomCenter),
+            gradient: currentGradient
           ),
           child: Padding(
             padding: const EdgeInsets.fromLTRB(20, 0, 20, 0),
@@ -70,7 +75,6 @@ class _AchievementState extends ConsumerState<Achievement> {
               shrinkWrap: true,
               physics: const NeverScrollableScrollPhysics(),
               children: [
-                // Row of Two Cards
                 Row(
                   children: [
                     Expanded(

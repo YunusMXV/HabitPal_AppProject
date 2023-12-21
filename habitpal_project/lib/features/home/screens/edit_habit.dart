@@ -1,15 +1,21 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:habitpal_project/features/auth/controller/auth_controller.dart';
 import 'package:habitpal_project/features/home/controller/home_controller.dart';
+import 'package:habitpal_project/model/habit_model.dart';
 import 'package:routemaster/routemaster.dart';
 
-class CreateHabitDialog extends ConsumerStatefulWidget {
-  const CreateHabitDialog({Key? key}) : super(key: key);
+class EditHabitDialog extends ConsumerStatefulWidget {
+  const EditHabitDialog({Key? key}) : super(key: key);
   @override
-  CreateHabitDialogState createState() => CreateHabitDialogState();
+  EditHabitDialogState createState() => EditHabitDialogState();
 }
 
-class CreateHabitDialogState extends ConsumerState<CreateHabitDialog> {
+class EditHabitDialogState extends ConsumerState<EditHabitDialog> {
+  final TextEditingController habitNameController = TextEditingController();
+  final TextEditingController habitDescriptionController = TextEditingController();
+
+  String id = '';
   String habitName = '';
   String habitDescription = '';
   String habitType = 'Physical';
@@ -31,14 +37,106 @@ class CreateHabitDialogState extends ConsumerState<CreateHabitDialog> {
   ];
 
   @override
-  Widget build(BuildContext context) {
+  void initState() {
+    super.initState();
+
+    final selectedHabit = ref.read(habitProvider);
+
+    if (selectedHabit != null) {
+      setState(() {
+        id = selectedHabit.habitId;
+        habitName = selectedHabit.habitTitle;
+        habitDescription = selectedHabit.description;
+        habitType = selectedHabit.category;
+        habitStartTime = selectedHabit.completionDeadline;
+        selectedDays = selectedHabit.targetCompletionDays;
+        habitNameController.text = habitName;
+        habitDescriptionController.text = habitDescription;
+      });
+
+      print(selectedHabit);
+    } else {
+      print('Habit with ID $selectedHabit.habitId not found.');
+    }
+  }
+
+  @override
+    Widget build(BuildContext context) {
+
     return SingleChildScrollView(
         child: AlertDialog(
-          title: const Text('Create a New Habit'),
+          title: Row(
+            children: [
+              Expanded(
+                child: Text(
+                  'Edit Habit',
+                  style: TextStyle(
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+              ),
+              Align(
+                alignment: Alignment.topRight,
+                child: IconButton(
+                  icon: const Icon(
+                    Icons.delete_outline,
+                    color: Colors.red,
+                    size: 30,
+                  ),
+                  onPressed: () async {
+                    final confirmDelete = await showDialog<bool>(
+                      context: context,
+                      builder: (context) => AlertDialog(
+                        title: const Text('Are you sure?'),
+                        content: const Text('Do you really want to delete this habit?'),
+                        actions: [
+                          TextButton(
+                            onPressed: () =>             Routemaster.of(context).pop(), // Cancel
+                            child: const Text('Cancel'),
+                          ),
+                          TextButton(
+                            onPressed: () => Navigator.pop(context, true), // Confirm
+                            child: const Text('Delete'),
+                            style: TextButton.styleFrom(
+                              foregroundColor: Colors.red,
+                            ),
+                          ),
+                        ],
+                      ),
+                    );
+
+                    if (confirmDelete!) {
+                      // Proceed with deleting the habit
+                      try {
+                        // Call your function to delete the habit
+                        ref.read(homeControllerProvider.notifier).deleteHabit(
+                          context, 
+                          id
+                        );
+                        Routemaster.of(context).pop();
+
+
+                        ScaffoldMessenger.of(context).showSnackBar(
+                          const SnackBar(content: Text('Habit deleted successfully')),
+                        );
+                      } catch (error) {
+                        // Handle any errors during deletion
+                        ScaffoldMessenger.of(context).showSnackBar(
+                          SnackBar(content: Text('Error deleting habit: $error')),
+                        );
+                      }
+                    }
+                  },
+                ),
+              ),
+            ],
+          ),
+
           content: Column(
             mainAxisSize: MainAxisSize.min,
             children: [
               TextField(
+                controller: habitNameController,
                 onChanged: (value) {
                   setState(() {
                     habitName = value;
@@ -48,6 +146,7 @@ class CreateHabitDialogState extends ConsumerState<CreateHabitDialog> {
               ),
               const SizedBox(height: 10),
               TextField(
+                controller: habitDescriptionController,
                 onChanged: (value) {
                   setState(() {
                     habitDescription = value;
@@ -58,7 +157,7 @@ class CreateHabitDialogState extends ConsumerState<CreateHabitDialog> {
               const SizedBox(height: 10),
               // Dropdown for habit types
               DropdownButtonFormField<String>(
-                value: habitType,
+                value: habitType, // Set the initial value here
                 decoration: const InputDecoration(labelText: 'Habit Type'),
                 items: habitTypes.map((String type) {
                   return DropdownMenuItem<String>(
@@ -162,21 +261,16 @@ class CreateHabitDialogState extends ConsumerState<CreateHabitDialog> {
             ElevatedButton(
               onPressed: () {
                 if (validateForm()) {
-                  ref.read(homeControllerProvider.notifier).createHabit(
+                  ref.read(homeControllerProvider.notifier).editHabit(
                     context, 
+                    id,
                     habitName, 
                     habitDescription, 
                     habitType, 
                     selectedDays, 
                     habitStartTime,
                   );
-                  Navigator.pop(context, {
-                    'habitName': habitName,
-                    'habitDescription': habitDescription,
-                    'habitType': habitType,
-                    'selectedDays': selectedDays.toList(),
-                    'habitStartTime': habitStartTime,
-                  });
+                  Routemaster.of(context).pop();
                 } else {
                   ScaffoldMessenger.of(context).showSnackBar(
                     const SnackBar(

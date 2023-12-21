@@ -1,19 +1,45 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:habitpal_project/features/auth/controller/auth_controller.dart';
+import 'package:habitpal_project/features/home/controller/home_controller.dart';
 import 'package:habitpal_project/features/home/screens/create_habit.dart';
-import 'package:habitpal_project/utils/color_utils.dart';
 import 'package:habitpal_project/widgets/BottomNav.dart';
 import 'package:habitpal_project/widgets/Habit_Tile.dart';
 import 'package:habitpal_project/widgets/UI_Buttons.dart';
 import 'package:routemaster/routemaster.dart';
+import 'package:habitpal_project/utils/gradient_themes.dart';
 
-class Home extends ConsumerWidget {
+class Home extends ConsumerStatefulWidget {
   const Home({super.key});
+  @override
+  ConsumerState<Home> createState() => _HomeState();
+}
+
+class _HomeState extends ConsumerState<Home> {
+  @override
+  void initState() {
+    super.initState();
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      final hi = ref.read(userProvider);
+      ref.read(homeControllerProvider.notifier).getRandomMotivationalQuote(
+        context,
+        hi!.selectedQuotesCategories,
+      );
+    });
+  }
+
 
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
-    final user = ref.watch(userProvider);
+  Widget build(BuildContext context) { 
+    final user = ref.watch(userProvider);   
+    final quote = ref.watch(quoteProvider);
+
+    final currentGradient =
+        user!.selectedTheme == 'Original'
+            ? GradientThemes.originalGradient
+            : user.selectedTheme == 'Natural'
+                ? GradientThemes.naturalGradient
+                : GradientThemes.darkGradient; 
     //print(user);
     return Scaffold(
       extendBodyBehindAppBar: true,
@@ -34,32 +60,41 @@ class Home extends ConsumerWidget {
         ],
         centerTitle: true,
         title: Text(
-          user!.username,
+          user.username,
           style: const TextStyle(fontSize: 20, fontWeight: FontWeight.bold, color: Colors.white),
         )
       ),
-      body: SingleChildScrollView(
-        child: Container(
-          width: MediaQuery.of(context).size.width,
-          height: MediaQuery.of(context).size.height,
-          decoration: BoxDecoration(
-            gradient: LinearGradient(colors: [
-            hexToColor("315b7d"), // #B4E1C5 to #ABCEAF to #B0DDD9
-            hexToColor("1d4769"), // #315b7d to #1d4769 to #223F57
-            hexToColor("223F57")
-          ], begin: Alignment.topCenter, end: Alignment.bottomCenter)),
-          child: Padding(
-            padding: const EdgeInsets.fromLTRB(20, 80, 20, 0),
+      body: Container(
+        width: MediaQuery.of(context).size.width,
+        height: MediaQuery.of(context).size.height,
+        decoration: BoxDecoration(
+          gradient: currentGradient
+        ),
+        child: Padding(
+          padding: const EdgeInsets.fromLTRB(20, 70, 20, 0),
+          child: SingleChildScrollView(
             child: Column(
+              mainAxisAlignment: MainAxisAlignment.start,
               children: [
-                const Text(
-                  "Get Good Sucker",
-                  style: TextStyle(
-                    fontSize: 13,
-                    fontWeight: FontWeight.w400,
-                    color: Colors.white),
+                SizedBox(
+                  width: 250, // Adjust width as needed
+                  height: 50, // Adjust height as needed
+                  child: quote == null
+                      ? const Center(child: CircularProgressIndicator())
+                      : Center(
+                        child: Text(
+                          quote.description,
+                          textAlign: TextAlign.center,
+                          style: const TextStyle(
+                            fontSize: 15,
+                            fontStyle: FontStyle.italic,
+                            fontFamily: 'Pacifico',
+                            color: Colors.white,
+                          ),
+                        ),
+                      ),
                 ),
-                const Habit(),
+                const HabitTile(),
                 reusableUIButton(context, "Create A New Habit", 0, () async {
                   Map<String, dynamic>? habitInfo = await showDialog(
                     context: context,
@@ -80,6 +115,7 @@ class Home extends ConsumerWidget {
                     print('Habit Start Time: ${habitInfo['habitStartTime']}');
                   }
                 }),
+                const SizedBox(height: 60,)
               ],
             ),
           ),

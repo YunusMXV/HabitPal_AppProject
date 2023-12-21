@@ -7,6 +7,7 @@ import 'package:habitpal_project/widgets/UI_Buttons.dart';
 import 'package:habitpal_project/widgets/image_widget.dart';
 import 'package:habitpal_project/widgets/password_fields.dart';
 import 'package:habitpal_project/features/auth/controller/auth_controller.dart';
+import 'package:routemaster/routemaster.dart';
 
 class SignUpScreen extends ConsumerStatefulWidget {
   const SignUpScreen({Key? key}) : super(key: key);
@@ -31,10 +32,19 @@ class _SignUpScreenState extends ConsumerState<SignUpScreen> {
         backgroundColor: Colors.transparent,
         elevation: 0,
         title: const Text(
-          "Sign Up",
-          style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold,  color: Colors.white),
+          'Sign Up',       
+          style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold, color: Colors.white),
         ),
         centerTitle: true,
+        leading: IconButton(
+          onPressed: () {
+            final currentRoute = Routemaster.of(context).currentRoute;
+            print(currentRoute);
+            Routemaster.of(context).pop();
+            print(currentRoute);
+          },
+          icon: const Icon(Icons.arrow_back, color: Colors.white,),
+        ),
       ),
       body: Container(
         width: MediaQuery.of(context).size.width,

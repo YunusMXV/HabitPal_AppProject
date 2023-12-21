@@ -65,7 +65,7 @@ class AuthRepository {
           email: userCredential.user!.email!, 
           username: userCredential.user!.displayName??"John Doe", 
           habits: [], 
-          selectedQuotesCategories: ["All"], 
+          selectedQuotesCategories: ["Exploring", "Kindness", "Listening", "Giving", "Optimism", "Resilience", "Helping"],
           selectedTheme: "Original"
         );
         // Map new user
@@ -102,7 +102,7 @@ class AuthRepository {
         email: userCredential.user!.email!,
         username: username,
         habits: [],
-        selectedQuotesCategories: ["All"],
+        selectedQuotesCategories: ["Exploring", "Kindness", "Listening", "Giving", "Optimism", "Resilience", "Helping"],
         selectedTheme: "Original",
       );
       // Add the user model to Firestore
@@ -167,6 +167,150 @@ class AuthRepository {
     }
   }
 
+  //change username
+  FutureVoid changeUsername({
+    required String username,
+  }) async {
+    try {
+      User? user = _auth.currentUser;
+      if (user != null) {
+        await _firestore.collection('users').doc(user.uid).update({
+          'username': username,
+        });
+      }
+
+      return right(null);
+    } on FirebaseException catch (e) {
+      throw e.message!; // Throw an exception with Firebase error message for other cases
+    } catch (e) {
+      return left(Failure(e.toString())); // Return a failure on other exceptions
+    }
+  }
+
+  //change motivational quote types
+  FutureVoid changeMotivationalQuotes({
+    required List<String> selectedQuotesCategories,
+  }) async {
+    try {
+      User? user = _auth.currentUser;
+      if (user != null) {
+        await _firestore.collection('users').doc(user.uid).update({
+          'selectedQuotesCategories': selectedQuotesCategories,
+        });
+      }
+
+      return right(null);
+    } on FirebaseException catch (e) {
+      throw e.message!; // Throw an exception with Firebase error message for other cases
+    } catch (e) {
+      return left(Failure(e.toString())); // Return a failure on other exceptions
+    }
+  }
+
+  //change theme type
+  FutureVoid changeTheme({
+    required String selectedTheme,
+  }) async {
+    try {
+      User? user = _auth.currentUser;
+      if (user != null) {
+        await _firestore.collection('users').doc(user.uid).update({
+          'selectedTheme': selectedTheme,
+        });
+      }
+
+      return right(null);
+    } on FirebaseException catch (e) {
+      throw e.message!; // Throw an exception with Firebase error message for other cases
+    } catch (e) {
+      return left(Failure(e.toString())); // Return a failure on other exceptions
+    }
+  }
+
+  // change password
+  FutureVoid changePassword({
+    required String password,
+    required String newPassword,
+  }) async {
+    try {
+      User? user = _auth.currentUser;
+
+      // Check if the user is signed in with email and password
+      bool isEmailAndPasswordSignIn = user?.providerData.any(
+            (userInfo) => userInfo.providerId == EmailAuthProvider.EMAIL_PASSWORD_SIGN_IN_METHOD,
+          ) ??
+          false;
+
+      if (user != null && isEmailAndPasswordSignIn) {
+        // Reauthenticate the user with the current password before changing it
+        AuthCredential credential = EmailAuthProvider.credential(
+          email: user.email!,
+          password: password,
+        );
+
+        await user.reauthenticateWithCredential(credential);
+
+        // If reauthentication is successful, change the password
+        await user.updatePassword(newPassword);
+      } else {
+        return left(Failure("You are not signed in with email and password."));
+      }
+
+      return right(null);
+    } on FirebaseException catch (e) {
+      throw e.message!; // Throw an exception with Firebase error message for other cases
+    } catch (e) {
+      return left(Failure(e.toString())); // Return a failure on other exceptions
+    }
+  }
+
+  //change email
+  FutureVoid changeEmail({
+    required String password,
+    required String email,
+  }) async {
+    try {
+      User? user = _auth.currentUser;
+
+      // Check if the user is signed in with email and password
+      bool isEmailAndPasswordSignIn = user?.providerData.any(
+            (userInfo) => userInfo.providerId == EmailAuthProvider.EMAIL_PASSWORD_SIGN_IN_METHOD,
+          ) ??
+          false;
+
+      if (user != null && isEmailAndPasswordSignIn) {
+        // Reauthenticate the user with the current password before changing it
+        AuthCredential credential = EmailAuthProvider.credential(
+          email: user.email!,
+          password: password,
+        );
+
+        await user.reauthenticateWithCredential(credential);
+
+        // If reauthentication is successful, change the password
+        List<String> signInMethods = await _auth.fetchSignInMethodsForEmail(email);
+        if (signInMethods.isEmpty) {
+          // If the email is not in use, update the email for the current user
+          await user.updateEmail(email);
+          // Check if the new email is verified
+          if (user.emailVerified) {
+            print("Email updated successfully");
+          } else {
+            return left(Failure("Error: Email is not verified"));
+          }
+        } else {
+          return left(Failure("Error: Email is already in use by another account"));
+        }
+      } else {
+        return left(Failure("You are not signed in with email and password."));
+      }
+      return right(null);
+    } on FirebaseException catch (e) {
+      throw e.message!; // Throw an exception with Firebase error message for other cases
+    } catch (e) {
+      return left(Failure(e.toString())); // Return a failure on other exceptions
+    }
+  }
   // Method to get user data from Firestore using the user ID
   // Stream means a continuous changing flow of that specific uid 
   Stream<UserModel> getUserData(String uid) {

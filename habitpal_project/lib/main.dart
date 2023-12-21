@@ -1,11 +1,9 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
-import 'package:firebase_ui_auth/firebase_ui_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_native_splash/flutter_native_splash.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:habitpal_project/features/auth/controller/auth_controller.dart';
-import 'package:habitpal_project/features/auth/screens/login.dart';
 import 'package:habitpal_project/model/user_model.dart';
 import 'package:habitpal_project/router.dart';
 import 'package:habitpal_project/widgets/loader.dart';

@@ -4,7 +4,6 @@ import "package:habitpal_project/features/auth/repository/auth_repository.dart";
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:habitpal_project/core/utils.dart';
 import 'package:habitpal_project/model/user_model.dart';
-import 'package:habitpal_project/features/home/screens/Home.dart';
 
 // State provider is a way to manage and listen to state changes
 // User model can be null so '?' used
@@ -108,7 +107,79 @@ class AuthController extends StateNotifier<bool> {
       // If reset password fails, show a snackbar with the error message
       (l) => showSnackBar(context, l.message),
       // If reset password succeeds, update the user state using Riverpod
-      (r) => Navigator.push(context, MaterialPageRoute(builder: ((context) => const Home()))),
+      (r) => null,
+    );
+  }
+
+  void changeUsername(BuildContext context, String username,) async {
+    state = true;
+    final user = await _authRepository.changeUsername(
+      username: username,
+    ); 
+    state = false;
+    user.fold(
+      // If reset password fails, show a snackbar with the error message
+      (l) => showSnackBar(context, l.message),
+      // If reset password succeeds, update the user state using Riverpod
+      (r) => null,
+    );
+  }
+
+  void changePassword(BuildContext context, String password, String newPassword) async {
+    state = true;
+    final user = await _authRepository.changePassword(
+      password: password,
+      newPassword: newPassword
+    );
+    state = false;
+    user.fold(
+      // If reset password fails, show a snackbar with the error message
+      (l) => showSnackBar(context, l.message),
+      // If reset password succeeds, update the user state using Riverpod
+      (r) => null,
+    );
+  }
+
+  void changeMotivationalQuotes(BuildContext context, List<String> selectedQuotesCategories) async {
+    state = true;
+    final user = await _authRepository.changeMotivationalQuotes(
+      selectedQuotesCategories: selectedQuotesCategories
+    );
+    state = false;
+    user.fold(
+      // If reset password fails, show a snackbar with the error message
+      (l) => showSnackBar(context, l.message),
+      // If reset password succeeds, update the user state using Riverpod
+      (r) => null,
+    );
+  }
+
+  void changeType(BuildContext context, String selectedTheme) async {
+    state = true;
+    final user = await _authRepository.changeTheme(
+      selectedTheme: selectedTheme
+    );
+    state = false;
+    user.fold(
+      // If reset password fails, show a snackbar with the error message
+      (l) => showSnackBar(context, l.message),
+      // If reset password succeeds, update the user state using Riverpod
+      (r) => null,
+    );
+  }
+
+  void changeEmail(BuildContext context, String password, String email) async {
+    state = true;
+    final user = await _authRepository.changeEmail(
+      password: password,
+      email: email
+    );
+    state = false;
+    user.fold(
+      // If reset password fails, show a snackbar with the error message
+      (l) => showSnackBar(context, l.message),
+      // If reset password succeeds, update the user state using Riverpod
+      (r) => null,
     );
   }
 

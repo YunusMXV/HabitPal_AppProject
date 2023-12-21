@@ -1,7 +1,5 @@
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:habitpal_project/features/home/screens/Home.dart';
 import 'package:habitpal_project/utils/color_utils.dart';
 import 'package:habitpal_project/widgets/Text_Fields.dart';
 import 'package:habitpal_project/widgets/UI_Buttons.dart';
@@ -11,7 +9,6 @@ import 'package:habitpal_project/features/auth/screens/forgot_password.dart';
 import 'package:habitpal_project/widgets/google_sign_in.dart';
 import 'package:habitpal_project/widgets/password_fields.dart';
 import 'package:habitpal_project/features/auth/controller/auth_controller.dart';
-import 'package:habitpal_project/widgets/loader.dart';
 
 class LogInScreen extends ConsumerStatefulWidget {
   const LogInScreen({super.key});
