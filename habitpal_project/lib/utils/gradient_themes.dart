@@ -14,9 +14,9 @@ class GradientThemes {
 
   static final naturalGradient = LinearGradient(
     colors: [
-      hexToColor("#B4E1C5"),
-      hexToColor("#ABCEAF"),
-      hexToColor("#B0DDD9"),
+      hexToColor("#067466"),
+      hexToColor("#067488"),
+      hexToColor("#A18DD6"),
     ],
     begin: Alignment.topCenter, end: Alignment.bottomCenter
   );

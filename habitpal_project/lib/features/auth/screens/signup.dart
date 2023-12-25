@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:habitpal_project/features/home/screens/Home.dart';
 import 'package:habitpal_project/utils/color_utils.dart';
 import 'package:habitpal_project/widgets/Text_Fields.dart';
 import 'package:habitpal_project/widgets/UI_Buttons.dart';
@@ -38,10 +37,7 @@ class _SignUpScreenState extends ConsumerState<SignUpScreen> {
         centerTitle: true,
         leading: IconButton(
           onPressed: () {
-            final currentRoute = Routemaster.of(context).currentRoute;
-            print(currentRoute);
             Routemaster.of(context).pop();
-            print(currentRoute);
           },
           icon: const Icon(Icons.arrow_back, color: Colors.white,),
         ),
@@ -102,7 +98,6 @@ class _SignUpScreenState extends ConsumerState<SignUpScreen> {
                           ),
                         ],
                       );
-                      print("Created New Account with Username: ${_userNameTextController.text}");
                       Navigator.pop(context);
                     } catch (e) {
                       print("Error ${e.toString()}");

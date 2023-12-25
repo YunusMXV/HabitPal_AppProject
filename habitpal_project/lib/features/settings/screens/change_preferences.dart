@@ -1,11 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:habitpal_project/features/auth/controller/auth_controller.dart';
-import 'package:habitpal_project/utils/color_utils.dart';
 import 'package:habitpal_project/utils/gradient_themes.dart';
-import 'package:habitpal_project/widgets/Text_Fields.dart';
 import 'package:habitpal_project/widgets/UI_Buttons.dart';
-import 'package:habitpal_project/widgets/password_fields.dart';
 import 'package:routemaster/routemaster.dart';
 
 class ChangePreferences extends ConsumerStatefulWidget {

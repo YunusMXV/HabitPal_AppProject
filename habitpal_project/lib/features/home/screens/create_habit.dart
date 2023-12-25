@@ -13,7 +13,7 @@ class CreateHabitDialogState extends ConsumerState<CreateHabitDialog> {
   String habitName = '';
   String habitDescription = '';
   String habitType = 'Physical';
-  DateTime habitStartTime = DateTime(DateTime.now().year, DateTime.now().month, DateTime.now().day, 0, 0); // Initialize with 0:00
+  DateTime habitStartTime = DateTime(2024, 1, 31, 0, 0); // Initialize with 0:00
 
   Set<String> selectedDays = <String>{};
 

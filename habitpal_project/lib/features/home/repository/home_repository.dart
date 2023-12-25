@@ -1,5 +1,5 @@
 import 'dart:math';
-
+import 'package:intl/intl.dart'; // Import for DateFormat
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -66,7 +66,7 @@ class HomeRepository {
     }
   }
 
-  Future<Either<Failure, Habit>> createHabit({
+  FutureEither<Habit> createHabit({
     required String habitTitle,
     required String description,
     required String category,
@@ -79,13 +79,10 @@ class HomeRepository {
 
       if (user != null) {
         // Retrieve the current user's document reference
-        DocumentReference userDocRef =
-            _firestore.collection('users').doc(user.uid);
+        DocumentReference userDocRef = _firestore.collection('users').doc(user.uid);
 
         // Check for duplicate habit titles in the Habit list of the current user
         DocumentSnapshot userSnapshot = await userDocRef.get();
-
-
         UserModel userModel = UserModel.fromMap(userSnapshot.data() as Map<String, dynamic>);
 
         if (userModel.habits.any((habit) => habit.habitTitle == habitTitle)) {
@@ -99,9 +96,12 @@ class HomeRepository {
           description: description,
           category: category,
           targetCompletionDays: targetCompletionDays,
-          progressHistory: [],
+          progressHistory: [], // Initialize with an empty list
           completionDeadline: completionDeadline,
         );
+
+        // Add progress entries for the next occurrences of the habit
+        _addProgressEntriesForNextOccurrences(habitModel);
 
         // Convert the Habit model to a Map
         Map<String, dynamic> habitMap = habitModel.toMap();
@@ -113,7 +113,7 @@ class HomeRepository {
         ];
 
         // Update the user model in Firestore
-        await _firestore.collection('users').doc(user.uid).update({
+        await userDocRef.update({
           'habits': updatedHabits,
         });
 
@@ -127,8 +127,182 @@ class HomeRepository {
       return left(Failure(e.toString())); // Return a failure on other exceptions
     }
   }
+  void _addProgressEntriesForNextOccurrences(Habit habitModel) {
+    DateTime? currentDate = DateTime.now();
+    DateTime completionDeadline = habitModel.completionDeadline;
+    Set<String> targetCompletionDays = habitModel.targetCompletionDays;
 
-  Future<Either<Failure, Habit>> editHabit({
+    do {
+      // Convert the weekday to a string representation
+      String currentDayString = _getDayString(currentDate!.weekday);
+
+      // Check if the current day is one of the target completion days
+      if (targetCompletionDays.contains(currentDayString)) {
+        // Create a ProgressEntry for the current date with completed = false
+        ProgressEntry progressEntry = ProgressEntry(
+          date: DateTime(currentDate.year, currentDate.month, currentDate.day),
+          completed: false,
+        );
+        // Ensure that the progressEntry is being added to the habitModel's progressHistory
+        habitModel.progressHistory.add(progressEntry);
+      }
+
+      // Move to the next occurrence of the target completion day
+      currentDate = _getNextTargetCompletionDate(currentDate, targetCompletionDays, completionDeadline);
+    } while (currentDate != null && currentDate.isBefore(completionDeadline));
+
+    print("Finish date: $currentDate");
+    print(habitModel);
+  }
+
+  String _getDayString(int weekday) {
+    // Convert weekday (1 to 7) to a string representation
+    switch (weekday) {
+      case 1:
+        return "Monday";
+      case 2:
+        return "Tuesday";
+      case 3:
+        return "Wednesday";
+      case 4:
+        return "Thursday";
+      case 5:
+        return "Friday";
+      case 6:
+        return "Saturday";
+      case 7:
+        return "Sunday";
+      default:
+        return "";
+    }
+  }
+
+
+  DateTime? _getNextTargetCompletionDate(
+    DateTime currentDate, Set<String> targetCompletionDays, DateTime completionDeadline) {
+    // Find the next target completion day from the current date, considering completionDeadline
+    print("\nCurrent Date: $currentDate");
+    for (int i = 1; i <= 7; i++) {
+      DateTime nextDate = currentDate.add(Duration(days: i));
+      print("Next Date: $nextDate");
+      // Check if nextDate is beyond completionDeadline and break if so
+      print(nextDate.isAfter(completionDeadline));
+      if (nextDate.isAfter(completionDeadline)) {
+        break;
+      }
+
+      String currentDayString = _getDayString(nextDate.weekday);
+
+      if (targetCompletionDays.contains(currentDayString)) {
+        return nextDate;
+      }
+    }
+    return null;
+  }
+
+
+  FutureEither<Unit> editProgress({
+    required String habitId,
+    required DateTime date,
+    required bool completed,
+  }) async {
+    try {
+      User? user = _auth.currentUser;
+
+      if (user != null) {
+        DocumentReference userDocRef = _firestore.collection('users').doc(user.uid);
+
+        // Get the user model
+        DocumentSnapshot userSnapshot = await userDocRef.get();
+        UserModel userModel = UserModel.fromMap(userSnapshot.data() as Map<String, dynamic>);
+
+        // Find the index of the habit to edit
+        int habitIndex = userModel.habits.indexWhere((habit) => habit.habitId == habitId);
+
+        if (habitIndex == -1) {
+          return left(Failure('Habit not found.'));
+        }
+        
+        int progressIndex = userModel.habits[habitIndex].progressHistory.indexWhere(
+          (progress) =>
+              progress.date.year == date.year &&
+              progress.date.month == date.month &&
+              progress.date.day == date.day,
+        );
+
+        if (progressIndex == -1) {
+          return left(Failure('Progress entry not found.'));
+        }
+
+        // Create the updated progress entry
+        ProgressEntry updatedProgressEntry = ProgressEntry(
+          date: userModel.habits[habitIndex].progressHistory[progressIndex].date,
+          completed: completed,
+        );
+
+        // Update the progressHistory list in the user model
+        List<ProgressEntry> updatedProgressHistory = [
+          ...userModel.habits[habitIndex].progressHistory.sublist(0, progressIndex),
+          updatedProgressEntry,
+          ...userModel.habits[habitIndex].progressHistory.sublist(progressIndex + 1),
+        ];
+
+        // Update the user model in Firestore
+        await userDocRef.update({
+          'habits': [
+            ...userModel.habits.sublist(0, habitIndex),
+            Habit(
+              habitId: userModel.habits[habitIndex].habitId,
+              habitTitle: userModel.habits[habitIndex].habitTitle,
+              description: userModel.habits[habitIndex].description,
+              category: userModel.habits[habitIndex].category,
+              targetCompletionDays: userModel.habits[habitIndex].targetCompletionDays,
+              progressHistory: updatedProgressHistory,
+              completionDeadline: userModel.habits[habitIndex].completionDeadline,
+            ),
+            ...userModel.habits.sublist(habitIndex + 1),
+          ].map((habit) => habit.toMap()).toList(),
+        });
+
+        return right(unit); // Return success
+      } else {
+        return left(Failure('User not authenticated.'));
+      }
+    } catch (e) {
+      return left(Failure(e.toString()));
+    }
+  }
+
+
+  FutureEither<ProgressEntry?> getProgressEntryForDate({
+    required String habitId,
+    required DateTime currentDate,
+  }) async {
+    try {
+      DocumentReference userDocRef = _firestore.collection('users').doc(_auth.currentUser!.uid);
+
+      // Get the user model
+      DocumentSnapshot userSnapshot = await userDocRef.get();
+      UserModel userModel = UserModel.fromMap(userSnapshot.data() as Map<String, dynamic>);
+
+      // Find the habit by habitId
+      Habit? habit = userModel.habits.firstWhere((habit) => habit.habitId == habitId);
+
+      // Find the progress entry for the current date
+      ProgressEntry? progressEntry = habit.progressHistory.firstWhere(
+        (progress) => DateFormat('yyyy-MM-dd').format(progress.date) ==
+            DateFormat('yyyy-MM-dd').format(currentDate),
+      );
+      return right(progressEntry);
+    } catch (e) {
+      throw Failure(e.toString());
+    }
+  }
+
+
+
+
+  FutureEither<Habit> editHabit({
     required String habitId,
     required String habitTitle,
     required String description,

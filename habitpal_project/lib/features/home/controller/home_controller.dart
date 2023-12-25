@@ -1,12 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:habitpal_project/core/utils.dart';
-import 'package:habitpal_project/features/auth/controller/auth_controller.dart';
 import 'package:habitpal_project/features/home/repository/home_repository.dart';
 import 'package:habitpal_project/model/habit_model.dart';
 import 'package:habitpal_project/model/progress_history_model.dart';
 import 'package:habitpal_project/model/quotes_model.dart';
-import 'package:habitpal_project/model/user_model.dart';
 
 
 final selectedIndexProvider = StateProvider<int>((ref) => 0);
@@ -14,6 +12,10 @@ final quoteProvider = StateProvider<QuotesModel?>((ref) => null); // Initially n
 
 
 final habitProvider = StateProvider<Habit?>((ref) => null);
+final progressHistoryProvider = StateProvider<ProgressEntry?>((ref) => null);
+
+final dateHistoryProvider = StateProvider<DateTime?>((ref) => DateTime.now());
+
 
 // State notifier provider allows to read and modify state
 // <AuthController, bool> type of state managed is bool and AuthController will control this state
@@ -103,6 +105,41 @@ class HomeController extends StateNotifier<bool> {
       (l) => showSnackBar(context, l.message),
       // If reset password succeeds, update the user state using Riverpod
       (r) => null,
+    );
+  }
+
+
+  void editProgress(BuildContext context, String id, DateTime date, bool completed) async {
+    state = true;
+
+    final user = await _homeRepository.editProgress(
+      habitId: id,
+      date: date,
+      completed: completed,
+    );
+
+    state = false;
+    user.fold(
+      // If reset password fails, show a snackbar with the error message
+      (l) => showSnackBar(context, l.message),
+      // If reset password succeeds, update the user state using Riverpod
+      (r) => null,
+    );
+  }
+
+  
+  void loadProgressEntryForDate(BuildContext context, String habitId, DateTime currentDate) async {
+    state = true;
+    final user = await _homeRepository.getProgressEntryForDate(
+      habitId: habitId,
+      currentDate: currentDate,
+    );
+    state = false;
+    user.fold(
+      // If reset password fails, show a snackbar with the error message
+      (l) => showSnackBar(context, l.message),
+      // If reset password succeeds, update the user state using Riverpod
+      (progressModel) => _ref.read(progressHistoryProvider.notifier).update((state) => progressModel),
     );
   }
 }

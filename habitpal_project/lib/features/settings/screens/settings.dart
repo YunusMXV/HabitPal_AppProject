@@ -1,18 +1,11 @@
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:habitpal_project/features/auth/controller/auth_controller.dart';
-import 'package:habitpal_project/features/auth/screens/login.dart';
 import 'package:habitpal_project/features/home/controller/home_controller.dart';
-import 'package:habitpal_project/router.dart';
 import 'package:habitpal_project/utils/gradient_themes.dart';
 import 'package:habitpal_project/widgets/settings_tile.dart';
 import 'package:ionicons/ionicons.dart';
-import 'package:habitpal_project/utils/color_utils.dart';
 import 'package:routemaster/routemaster.dart';
-import 'package:habitpal_project/features/settings/screens/change_password.dart';
-import 'package:habitpal_project/features/settings/screens/change_email.dart';
-import 'package:habitpal_project/features/settings/screens/change_username.dart';
 
 //import 'package:habitpal_project/Screens/Home.dart';
 

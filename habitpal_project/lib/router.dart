@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:habitpal_project/features/achievements/screens/Achievement.dart';
-import 'package:habitpal_project/features/history/screens/History.dart';
+import 'package:habitpal_project/features/achievements/screens/achievement.dart';
+import 'package:habitpal_project/features/history/screens/history.dart';
 import 'package:habitpal_project/features/home/screens/Home.dart';
 import 'package:habitpal_project/features/settings/screens/settings.dart';
 import 'package:habitpal_project/widgets/loader.dart';

@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:habitpal_project/features/achievements/screens/barGraph/bar_graph.dart';
 import 'package:habitpal_project/features/achievements/screens/pieChart/pie_chart.dart';
 import 'package:habitpal_project/features/auth/controller/auth_controller.dart';
-import 'package:habitpal_project/utils/color_utils.dart';
 import 'package:habitpal_project/utils/gradient_themes.dart';
 import 'package:habitpal_project/widgets/BottomNav.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -45,10 +44,7 @@ class _AchievementState extends ConsumerState<Achievement> {
         actions: [
           IconButton(
             onPressed: () {
-              final currentRoute = Routemaster.of(context).currentRoute;
-              print(currentRoute);
               Routemaster.of(context).push('settings');
-              print(currentRoute);
             },
             icon: const Icon(
               Icons.settings,

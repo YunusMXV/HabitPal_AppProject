@@ -1,20 +1,19 @@
 import 'package:flutter/material.dart';
 import 'package:habitpal_project/features/home/controller/home_controller.dart';
-import 'package:habitpal_project/features/home/screens/edit_habit.dart';
 import 'package:intl/intl.dart'; // Import for DateFormat
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:habitpal_project/features/auth/controller/auth_controller.dart';
 import 'package:habitpal_project/model/habit_model.dart';
-import 'package:routemaster/routemaster.dart';
+import 'package:ionicons/ionicons.dart';
 
-class HabitTile extends ConsumerStatefulWidget {
-  const HabitTile({super.key});
+class HistoryTile extends ConsumerStatefulWidget {
+  const HistoryTile({super.key});
 
   @override
-  ConsumerState<HabitTile> createState() => _HabitTileState();
+  ConsumerState<HistoryTile> createState() => _HistoryTileState();
 }
 
-class _HabitTileState extends ConsumerState<HabitTile> {
+class _HistoryTileState extends ConsumerState<HistoryTile> {
   List<Habit> habitslist = [];
   @override
   void initState() {
@@ -32,8 +31,8 @@ class _HabitTileState extends ConsumerState<HabitTile> {
   @override
   Widget build(BuildContext context) {
     final user = ref.watch(userProvider);
-    DateTime now = DateTime.now();
-    String currentDay = DateFormat('EEEE').format(now); // Get the current day
+    final selectedDate = ref.watch(dateHistoryProvider);
+    String currentDay = DateFormat('EEEE').format(selectedDate!); // Get the current day
 
     return ListView.builder(
       padding: const EdgeInsets.all(0.0),
@@ -46,9 +45,9 @@ class _HabitTileState extends ConsumerState<HabitTile> {
         // Check if the current day is in the habit's completion days
         if (habit.targetCompletionDays.contains(currentDay)) {
           var selectedProgress = habit.progressHistory.where((progress) {
-            return progress.date.year == now.year &&
-                progress.date.month == now.month &&
-                progress.date.day == now.day;
+            return progress.date.year == selectedDate.year &&
+                progress.date.month == selectedDate.month &&
+                progress.date.day == selectedDate.day;
           }).toList();
           return Card(
             color: Colors.yellowAccent,
@@ -65,16 +64,7 @@ class _HabitTileState extends ConsumerState<HabitTile> {
               subtitle: Text(
                 _formatTime12Hour(habit.completionDeadline),
               ),
-              trailing: InkWell(
-                onTap: () {
-                  ref.read(homeControllerProvider.notifier).editProgress(
-                    context, 
-                    habit.habitId, 
-                    DateTime(now.year, now.month, now.day), 
-                    !(selectedProgress.isNotEmpty && selectedProgress[0].completed),
-                  );
-                },
-                child: Container(
+              trailing: Container(
                   padding: EdgeInsets.all(10), // Adjust the padding as needed
                   decoration: BoxDecoration(
                     borderRadius: BorderRadius.circular(15), // Add some border radius
@@ -82,25 +72,24 @@ class _HabitTileState extends ConsumerState<HabitTile> {
                   ),
                   child: Icon(
                     selectedProgress.isNotEmpty && selectedProgress[0].completed
-                        ? Icons.check_box
-                        : Icons.check_box_outline_blank,
+                        ? Ionicons.checkmark_circle
+                        : Ionicons.close_circle_outline,
                     size: 30, // Set your desired icon size
                     color: Colors.white, // Set your desired icon color
-                  ),
                 ),
               ),
               onTap: () async {
-                ref.read(habitProvider.notifier).update((state) => habit);
-                Map<String, dynamic>? habitInfo = await showDialog(
-                  context: context,
-                  barrierDismissible: true,
-                  builder: (context) => PopScope(
-                    onPopInvoked: (canPop) async {
-                      Routemaster.of(context).pop();
-                    },
-                    child: const EditHabitDialog(),
-                  ),
-                );
+                // ref.read(habitProvider.notifier).update((state) => habit);
+                // Map<String, dynamic>? habitInfo = await showDialog(
+                //   context: context,
+                //   barrierDismissible: true,
+                //   builder: (context) => PopScope(
+                //     onPopInvoked: (canPop) async {
+                //       Routemaster.of(context).pop();
+                //     },
+                //     child: const EditHabitDialog(),
+                //   ),
+                // );
               },
             ),
           );

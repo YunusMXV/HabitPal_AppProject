@@ -1,8 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:habitpal_project/features/auth/controller/auth_controller.dart';
 import 'package:habitpal_project/features/home/controller/home_controller.dart';
-import 'package:habitpal_project/model/habit_model.dart';
 import 'package:routemaster/routemaster.dart';
 
 class EditHabitDialog extends ConsumerStatefulWidget {
@@ -19,7 +17,7 @@ class EditHabitDialogState extends ConsumerState<EditHabitDialog> {
   String habitName = '';
   String habitDescription = '';
   String habitType = 'Physical';
-  DateTime habitStartTime = DateTime(DateTime.now().year, DateTime.now().month, DateTime.now().day, 0, 0); // Initialize with 0:00
+  DateTime habitStartTime = DateTime(2024, 1, 31, 0, 0); // Initialize with 0:00
 
   Set<String> selectedDays = <String>{};
 
