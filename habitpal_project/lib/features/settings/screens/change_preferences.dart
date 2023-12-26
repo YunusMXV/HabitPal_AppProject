@@ -61,10 +61,7 @@ class _ChangePreferencesState extends ConsumerState<ChangePreferences> {
         centerTitle: true,
         leading: IconButton(
           onPressed: () {
-            final currentRoute = Routemaster.of(context).currentRoute;
-            print(currentRoute);
             Routemaster.of(context).pop();
-            print(currentRoute);
           },
           icon: const Icon(Icons.arrow_back, color: Colors.white,),
         ),
@@ -98,9 +95,10 @@ class _ChangePreferencesState extends ConsumerState<ChangePreferences> {
                   return ElevatedButton(
                     onPressed: () {
                       setState(() {
-                        if (initialSelectedCategories.length > 2 && initialSelectedCategories.contains(type)) {
+                        if (initialSelectedCategories.length >= 2 && initialSelectedCategories.contains(type)) {
                           initialSelectedCategories.remove(type);
-                        } else {
+                        }
+                        else if (!initialSelectedCategories.contains(type)) {
                           initialSelectedCategories.add(type);
                         }
                       });

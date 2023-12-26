@@ -38,7 +38,6 @@ dependencies:
   firebase_core: ^2.21.0
   firebase_auth: ^4.12.1
   cloud_firestore: ^4.12.2
-  firebase_ui_auth: ^1.9.1
   flutter_native_splash: ^2.3.5
   google_sign_in: ^6.1.6
   ionicons: ^0.2.2
@@ -48,7 +47,10 @@ dependencies:
   routemaster: ^1.0.1
   curved_navigation_bar: ^1.0.3
   fl_chart: ^0.65.0
-  intl: ^0.18.1
+  golden_toolkit: ^0.15.0
+  snapshot: ^0.2.5
+  fake_cloud_firestore: ^2.4.4
+  mockito: ^5.4.4
 
   
 
