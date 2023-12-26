@@ -24,7 +24,8 @@ class _HabitTileState extends ConsumerState<HabitTile> {
 
   String _formatTime12Hour(DateTime time) {
     final hour = time.hour % 12; // Adjust for 12-hour format
-    final minute = time.minute.toString().padLeft(2, '0'); // Ensure 2-digit minutes
+    final minute =
+        time.minute.toString().padLeft(2, '0'); // Ensure 2-digit minutes
     final amPm = time.hour >= 12 ? 'PM' : 'AM'; // Determine AM/PM
     return '$hour:$minute $amPm'; // Combine hour, minute, and AM/PM
   }
@@ -51,15 +52,16 @@ class _HabitTileState extends ConsumerState<HabitTile> {
                 progress.date.day == now.day;
           }).toList();
           return Card(
-            color: Colors.yellowAccent,
+            color: Colors.white,
             child: ListTile(
-              minVerticalPadding: 20,
+              minVerticalPadding: 15,
               leading: CircleAvatar(
-                backgroundColor: Colors.white,
-                maxRadius: 40,
-                child: 
-                //Text(habit.targetCompletionDays.toString().substring(1, 4)),
-                Text(currentDay.substring(0,3)),
+                backgroundColor: Colors.blue,
+                maxRadius: 30,
+                child:
+                    //Text(habit.targetCompletionDays.toString().substring(1, 4)),
+                    Text(currentDay.substring(0, 3),
+                        style: const TextStyle(color: Colors.white)),
               ),
               title: Text(habit.habitTitle),
               subtitle: Text(
@@ -68,24 +70,27 @@ class _HabitTileState extends ConsumerState<HabitTile> {
               trailing: InkWell(
                 onTap: () {
                   ref.read(homeControllerProvider.notifier).editProgress(
-                    context, 
-                    habit.habitId, 
-                    DateTime(now.year, now.month, now.day), 
-                    !(selectedProgress.isNotEmpty && selectedProgress[0].completed),
-                  );
+                        context,
+                        habit.habitId,
+                        DateTime(now.year, now.month, now.day),
+                        !(selectedProgress.isNotEmpty &&
+                            selectedProgress[0].completed),
+                      );
                 },
                 child: Container(
                   padding: EdgeInsets.all(10), // Adjust the padding as needed
                   decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(15), // Add some border radius
-                    color: Colors.transparent, // Set your desired background color
+                    borderRadius:
+                        BorderRadius.circular(15), // Add some border radius
+                    color:
+                        Colors.transparent, // Set your desired background color
                   ),
                   child: Icon(
                     selectedProgress.isNotEmpty && selectedProgress[0].completed
                         ? Icons.check_box
                         : Icons.check_box_outline_blank,
                     size: 30, // Set your desired icon size
-                    color: Colors.white, // Set your desired icon color
+                    color: Colors.blue, // Set your desired icon color
                   ),
                 ),
               ),

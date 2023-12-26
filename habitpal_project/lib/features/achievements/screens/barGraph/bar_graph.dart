@@ -14,14 +14,13 @@ class MyBarGraph extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     BarData myBarData = BarData(
-      sunHabit: weeklySummary[0], 
-      monHabit: weeklySummary[1], 
-      tueHabit: weeklySummary[2], 
-      wedHabit: weeklySummary[3], 
-      thurHabit: weeklySummary[4], 
-      friHabit: weeklySummary[5], 
-      satHabit: weeklySummary[6]
-    );
+        sunHabit: weeklySummary[0],
+        monHabit: weeklySummary[1],
+        tueHabit: weeklySummary[2],
+        wedHabit: weeklySummary[3],
+        thurHabit: weeklySummary[4],
+        friHabit: weeklySummary[5],
+        satHabit: weeklySummary[6]);
 
     myBarData.initializeBarData();
 
@@ -33,9 +32,12 @@ class MyBarGraph extends ConsumerWidget {
         borderData: FlBorderData(show: false),
         titlesData: FlTitlesData(
           show: true,
-          topTitles: const AxisTitles(sideTitles: SideTitles(showTitles: false)),
-          leftTitles: const AxisTitles(sideTitles: SideTitles(showTitles: false)),
-          rightTitles: const AxisTitles(sideTitles: SideTitles(showTitles: false)),
+          topTitles:
+              const AxisTitles(sideTitles: SideTitles(showTitles: false)),
+          leftTitles:
+              const AxisTitles(sideTitles: SideTitles(showTitles: false)),
+          rightTitles:
+              const AxisTitles(sideTitles: SideTitles(showTitles: false)),
           bottomTitles: AxisTitles(
             sideTitles: SideTitles(
               showTitles: true,
@@ -43,24 +45,26 @@ class MyBarGraph extends ConsumerWidget {
             ),
           ),
         ),
-        barGroups: myBarData.barData.map(
-          (data) => BarChartGroupData(
-            x: data.x,
-            barRods: [
-              BarChartRodData(
-                toY: data.y,
-                color: Colors.grey[800],
-                width: 25,
-                borderRadius: BorderRadius.circular(4),
-                backDrawRodData: BackgroundBarChartRodData(
-                  show: true,
-                  toY: 100,
-                  color: Colors.transparent,
-                ),
+        barGroups: myBarData.barData
+            .map(
+              (data) => BarChartGroupData(
+                x: data.x,
+                barRods: [
+                  BarChartRodData(
+                    toY: data.y,
+                    color: Colors.blueAccent,
+                    width: 25,
+                    borderRadius: BorderRadius.circular(10),
+                    backDrawRodData: BackgroundBarChartRodData(
+                      show: true,
+                      toY: 100,
+                      color: Colors.transparent,
+                    ),
+                  ),
+                ],
               ),
-            ],
-          ),
-        ).toList(),
+            )
+            .toList(),
       ),
     );
   }
@@ -69,7 +73,7 @@ class MyBarGraph extends ConsumerWidget {
     const style = TextStyle(
       color: Colors.black,
       fontWeight: FontWeight.bold,
-      fontSize: 14,
+      fontSize: 13,
     );
 
     Widget text;

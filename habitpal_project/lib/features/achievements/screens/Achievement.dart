@@ -29,12 +29,11 @@ class _AchievementState extends ConsumerState<Achievement> {
   @override
   Widget build(BuildContext context) {
     final user = ref.watch(userProvider);
-    final currentGradient =
-        user!.selectedTheme == 'Original'
-            ? GradientThemes.originalGradient
-            : user.selectedTheme == 'Natural'
-                ? GradientThemes.naturalGradient
-                : GradientThemes.darkGradient; // Set dark theme gradient
+    final currentGradient = user!.selectedTheme == 'Original'
+        ? GradientThemes.originalGradient
+        : user.selectedTheme == 'Natural'
+            ? GradientThemes.naturalGradient
+            : GradientThemes.darkGradient; // Set dark theme gradient
     return Scaffold(
       extendBodyBehindAppBar: true,
       extendBody: true,
@@ -56,15 +55,14 @@ class _AchievementState extends ConsumerState<Achievement> {
         centerTitle: true,
         title: const Text(
           "Achievements",
-          style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold, color: Colors.white),
+          style: TextStyle(
+              fontSize: 20, fontWeight: FontWeight.bold, color: Colors.white),
         ),
       ),
       body: SingleChildScrollView(
         child: Container(
           width: MediaQuery.of(context).size.width,
-          decoration: BoxDecoration(
-            gradient: currentGradient
-          ),
+          decoration: BoxDecoration(gradient: currentGradient),
           child: Padding(
             padding: const EdgeInsets.fromLTRB(20, 0, 20, 0),
             child: ListView(
@@ -74,11 +72,15 @@ class _AchievementState extends ConsumerState<Achievement> {
                 Row(
                   children: [
                     Expanded(
-                      child: _buildInfoCard("Best Streak", "42"), // Replace "42" with your actual best streak number
+                      child: _buildInfoCard("Best Streak",
+                          "42"), // Replace "42" with your actual best streak number
                     ),
-                    const SizedBox(width: 16), // Add spacing between the two cards if needed
+                    const SizedBox(
+                        width:
+                            16), // Add spacing between the two cards if needed
                     Expanded(
-                      child: _buildInfoCard("Current Streak", "15"), // Replace "15" with your actual current streak number
+                      child: _buildInfoCard("Current Streak",
+                          "15"), // Replace "15" with your actual current streak number
                     ),
                   ],
                 ),
@@ -96,7 +98,10 @@ class _AchievementState extends ConsumerState<Achievement> {
                       children: [
                         const Text(
                           "Weekly Bar Chart",
-                          style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold, color: Colors.black),
+                          style: TextStyle(
+                              fontSize: 20,
+                              fontWeight: FontWeight.bold,
+                              color: Colors.black),
                           textAlign: TextAlign.center,
                         ),
                         SizedBox(
@@ -116,11 +121,11 @@ class _AchievementState extends ConsumerState<Achievement> {
                   shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(10),
                   ),
-                  child: SizedBox(
+                  child: const SizedBox(
                     width: 350,
                     height: 300,
                     child: Padding(
-                      padding: const EdgeInsets.all(8.0),
+                      padding: EdgeInsets.all(8.0),
                       child: MyPieChart(),
                     ),
                   ),
@@ -147,13 +152,19 @@ class _AchievementState extends ConsumerState<Achievement> {
           children: [
             Text(
               title,
-              style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold, color: Colors.black),
+              style: const TextStyle(
+                  fontSize: 20,
+                  fontWeight: FontWeight.bold,
+                  color: Colors.black),
               textAlign: TextAlign.center,
             ),
             const SizedBox(height: 10),
             Text(
               number,
-              style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold, color: Colors.black),
+              style: const TextStyle(
+                  fontSize: 24,
+                  fontWeight: FontWeight.bold,
+                  color: Colors.black),
               textAlign: TextAlign.center,
             ),
           ],

@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 
-Container reusableUIButton(BuildContext context, String title, int size, Function onTap) {
+Container reusableUIButton(
+    BuildContext context, String title, int size, Function onTap) {
   return Container(
     width: MediaQuery.of(context).size.width - size,
     height: 50,

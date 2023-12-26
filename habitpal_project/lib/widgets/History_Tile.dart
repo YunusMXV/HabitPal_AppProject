@@ -23,7 +23,8 @@ class _HistoryTileState extends ConsumerState<HistoryTile> {
 
   String _formatTime12Hour(DateTime time) {
     final hour = time.hour % 12; // Adjust for 12-hour format
-    final minute = time.minute.toString().padLeft(2, '0'); // Ensure 2-digit minutes
+    final minute =
+        time.minute.toString().padLeft(2, '0'); // Ensure 2-digit minutes
     final amPm = time.hour >= 12 ? 'PM' : 'AM'; // Determine AM/PM
     return '$hour:$minute $amPm'; // Combine hour, minute, and AM/PM
   }
@@ -32,7 +33,8 @@ class _HistoryTileState extends ConsumerState<HistoryTile> {
   Widget build(BuildContext context) {
     final user = ref.watch(userProvider);
     final selectedDate = ref.watch(dateHistoryProvider);
-    String currentDay = DateFormat('EEEE').format(selectedDate!); // Get the current day
+    String currentDay =
+        DateFormat('EEEE').format(selectedDate!); // Get the current day
 
     return ListView.builder(
       padding: const EdgeInsets.all(0.0),
@@ -50,32 +52,38 @@ class _HistoryTileState extends ConsumerState<HistoryTile> {
                 progress.date.day == selectedDate.day;
           }).toList();
           return Card(
-            color: Colors.yellowAccent,
+            color: Colors.white,
             child: ListTile(
-              minVerticalPadding: 20,
+              minVerticalPadding: 15,
               leading: CircleAvatar(
-                backgroundColor: Colors.white,
-                maxRadius: 40,
-                child: 
-                //Text(habit.targetCompletionDays.toString().substring(1, 4)),
-                Text(currentDay.substring(0,3)),
+                backgroundColor: Colors.blue,
+                maxRadius: 30,
+                child:
+                    //Text(habit.targetCompletionDays.toString().substring(1, 4)),
+                    Text(currentDay.substring(0, 3),
+                        style: const TextStyle(
+                          color: Colors.white,
+                        )),
               ),
               title: Text(habit.habitTitle),
               subtitle: Text(
                 _formatTime12Hour(habit.completionDeadline),
               ),
               trailing: Container(
-                  padding: EdgeInsets.all(10), // Adjust the padding as needed
-                  decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(15), // Add some border radius
-                    color: Colors.transparent, // Set your desired background color
-                  ),
-                  child: Icon(
-                    selectedProgress.isNotEmpty && selectedProgress[0].completed
-                        ? Ionicons.checkmark_circle
-                        : Ionicons.close_circle_outline,
-                    size: 30, // Set your desired icon size
-                    color: Colors.white, // Set your desired icon color
+                padding:
+                    const EdgeInsets.all(10), // Adjust the padding as needed
+                decoration: BoxDecoration(
+                  borderRadius:
+                      BorderRadius.circular(15), // Add some border radius
+                  color:
+                      Colors.transparent, // Set your desired background color
+                ),
+                child: Icon(
+                  selectedProgress.isNotEmpty && selectedProgress[0].completed
+                      ? Ionicons.checkmark_circle
+                      : Ionicons.close_circle_outline,
+                  size: 30, // Set your desired icon size
+                  color: Colors.blue, // Set your desired icon color
                 ),
               ),
               onTap: () async {
