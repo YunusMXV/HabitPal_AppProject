@@ -523,9 +523,17 @@ class HomeRepository {
             default:
           }
         }
+ 
+      List<double> resultList = [0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0];
 
-      List<double> resultList = divideListByNumber(categoryProgress, userModel.habits.length.toDouble());
-
+      if(userModel.habits.isNotEmpty)
+      {
+        resultList = divideListByNumber(categoryProgress, userModel.habits.length.toDouble());
+      }
+      else
+      {
+        resultList = [0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0];
+      }
         return right(resultList);
       } else {
         return left(Failure('User not authenticated.'));

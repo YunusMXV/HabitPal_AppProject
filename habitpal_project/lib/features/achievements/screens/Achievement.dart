@@ -33,22 +33,13 @@ class _AchievementState extends ConsumerState<Achievement> {
       );
     });
   }
-  
-  // List<double> weeklySummary = [
-  //   15.0,
-  //   30.0,
-  //   45.0,
-  //   55.0,
-  //   95.0,
-  //   100.0,
-  //   25.0,
-  // ];
 
   @override
   Widget build(BuildContext context) {
     final user = ref.watch(userProvider);
     final List<double> weeklySummary = ref.watch(weeklyProgressProvider);
     final List<double> categorySummary = ref.watch(categoryProgressProvider);
+    //List<double> categorySummary = [0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0];
     //print("Weekly Summary: $weeklySummary");
     final currentGradient = user!.selectedTheme == 'Original'
         ? GradientThemes.originalGradient
