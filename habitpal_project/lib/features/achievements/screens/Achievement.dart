@@ -2,11 +2,12 @@ import 'package:flutter/material.dart';
 import 'package:habitpal_project/features/achievements/screens/barGraph/bar_graph.dart';
 import 'package:habitpal_project/features/achievements/screens/pieChart/pie_chart.dart';
 import 'package:habitpal_project/features/auth/controller/auth_controller.dart';
+import 'package:habitpal_project/features/home/controller/home_controller.dart';
 import 'package:habitpal_project/utils/gradient_themes.dart';
 import 'package:habitpal_project/widgets/BottomNav.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:habitpal_project/widgets/info_card.dart';
 import 'package:routemaster/routemaster.dart';
-// import 'package:habitpal_project/widgets/BottomNav.dart';
 
 class Achievement extends ConsumerStatefulWidget {
   const Achievement({super.key});
@@ -16,19 +17,39 @@ class Achievement extends ConsumerStatefulWidget {
 }
 
 class _AchievementState extends ConsumerState<Achievement> {
-  List<double> weeklySummary = [
-    15.0,
-    30.0,
-    45.0,
-    55.0,
-    95.0,
-    100.0,
-    25.0,
-  ];
+
+  @override
+  void initState() {
+    super.initState();
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      final hi = ref.read(userProvider);
+      ref.read(homeControllerProvider.notifier).calculateWeeklyProgress(
+        context, 
+        hi!.habits,
+      );
+      ref.read(homeControllerProvider.notifier).calculateWeeklyTypes(
+        context,
+        hi.habits,
+      );
+    });
+  }
+  
+  // List<double> weeklySummary = [
+  //   15.0,
+  //   30.0,
+  //   45.0,
+  //   55.0,
+  //   95.0,
+  //   100.0,
+  //   25.0,
+  // ];
 
   @override
   Widget build(BuildContext context) {
     final user = ref.watch(userProvider);
+    final List<double> weeklySummary = ref.watch(weeklyProgressProvider);
+    final List<double> categorySummary = ref.watch(categoryProgressProvider);
+    //print("Weekly Summary: $weeklySummary");
     final currentGradient = user!.selectedTheme == 'Original'
         ? GradientThemes.originalGradient
         : user.selectedTheme == 'Natural'
@@ -72,15 +93,15 @@ class _AchievementState extends ConsumerState<Achievement> {
                 Row(
                   children: [
                     Expanded(
-                      child: _buildInfoCard("Best Streak",
-                          "42"), // Replace "42" with your actual best streak number
+                      child: infoCard("Best Streak",
+                          user.maxStreak.toString()), // Replace "42" with your actual best streak number
                     ),
                     const SizedBox(
                         width:
                             16), // Add spacing between the two cards if needed
                     Expanded(
-                      child: _buildInfoCard("Current Streak",
-                          "15"), // Replace "15" with your actual current streak number
+                      child: infoCard("Current Streak",
+                          user.currentStreak.toString()), // Replace "15" with your actual current streak number
                     ),
                   ],
                 ),
@@ -121,12 +142,14 @@ class _AchievementState extends ConsumerState<Achievement> {
                   shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(10),
                   ),
-                  child: const SizedBox(
+                  child: SizedBox(
                     width: 350,
                     height: 300,
                     child: Padding(
-                      padding: EdgeInsets.all(8.0),
-                      child: MyPieChart(),
+                      padding: const EdgeInsets.all(8.0),
+                      child: MyPieChart(
+                        categorySummary: categorySummary,
+                      ),
                     ),
                   ),
                 ),
@@ -136,40 +159,6 @@ class _AchievementState extends ConsumerState<Achievement> {
         ),
       ),
       bottomNavigationBar: const BottomNav(),
-    );
-  }
-
-  Widget _buildInfoCard(String title, String number) {
-    return Card(
-      elevation: 4,
-      shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.circular(10),
-      ),
-      child: Padding(
-        padding: const EdgeInsets.all(8.0),
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            Text(
-              title,
-              style: const TextStyle(
-                  fontSize: 20,
-                  fontWeight: FontWeight.bold,
-                  color: Colors.black),
-              textAlign: TextAlign.center,
-            ),
-            const SizedBox(height: 10),
-            Text(
-              number,
-              style: const TextStyle(
-                  fontSize: 24,
-                  fontWeight: FontWeight.bold,
-                  color: Colors.black),
-              textAlign: TextAlign.center,
-            ),
-          ],
-        ),
-      ),
     );
   }
 }

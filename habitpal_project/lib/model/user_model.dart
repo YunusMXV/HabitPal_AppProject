@@ -1,5 +1,7 @@
 
 
+import 'dart:convert';
+
 import 'package:flutter/foundation.dart';
 
 import 'package:habitpal_project/model/habit_model.dart';
@@ -11,6 +13,8 @@ class UserModel {
   final List<Habit> habits;
   final List<String> selectedQuotesCategories;
   final String selectedTheme;
+  final int maxStreak;
+  final int currentStreak;
   UserModel({
     required this.uid,
     required this.email,
@@ -18,6 +22,8 @@ class UserModel {
     required this.habits,
     required this.selectedQuotesCategories,
     required this.selectedTheme,
+    required this.maxStreak,
+    required this.currentStreak,
   });
 
   UserModel copyWith({
@@ -27,6 +33,8 @@ class UserModel {
     List<Habit>? habits,
     List<String>? selectedQuotesCategories,
     String? selectedTheme,
+    int? maxStreak,
+    int? currentStreak,
   }) {
     return UserModel(
       uid: uid ?? this.uid,
@@ -35,6 +43,8 @@ class UserModel {
       habits: habits ?? this.habits,
       selectedQuotesCategories: selectedQuotesCategories ?? this.selectedQuotesCategories,
       selectedTheme: selectedTheme ?? this.selectedTheme,
+      maxStreak: maxStreak ?? this.maxStreak,
+      currentStreak: currentStreak ?? this.currentStreak,
     );
   }
 
@@ -46,6 +56,8 @@ class UserModel {
       'habits': habits.map((x) => x.toMap()).toList(),
       'selectedQuotesCategories': selectedQuotesCategories,
       'selectedTheme': selectedTheme,
+      'maxStreak': maxStreak,
+      'currentStreak': currentStreak,
     };
   }
 
@@ -57,13 +69,18 @@ class UserModel {
       habits: List<Habit>.from(map['habits']?.map((x) => Habit.fromMap(x))),
       selectedQuotesCategories: List<String>.from(map['selectedQuotesCategories']),
       selectedTheme: map['selectedTheme'] ?? '',
+      maxStreak: map['maxStreak']?.toInt() ?? 0,
+      currentStreak: map['currentStreak']?.toInt() ?? 0,
     );
   }
 
+  String toJson() => json.encode(toMap());
+
+  factory UserModel.fromJson(String source) => UserModel.fromMap(json.decode(source));
 
   @override
   String toString() {
-    return 'UserModel(uid: $uid, email: $email, username: $username, habits: $habits, selectedQuotesCategories: $selectedQuotesCategories, selectedTheme: $selectedTheme)';
+    return 'UserModel(uid: $uid, email: $email, username: $username, habits: $habits, selectedQuotesCategories: $selectedQuotesCategories, selectedTheme: $selectedTheme, maxStreak: $maxStreak, currentStreak: $currentStreak)';
   }
 
   @override
@@ -76,7 +93,9 @@ class UserModel {
       other.username == username &&
       listEquals(other.habits, habits) &&
       listEquals(other.selectedQuotesCategories, selectedQuotesCategories) &&
-      other.selectedTheme == selectedTheme;
+      other.selectedTheme == selectedTheme &&
+      other.maxStreak == maxStreak &&
+      other.currentStreak == currentStreak;
   }
 
   @override
@@ -86,6 +105,8 @@ class UserModel {
       username.hashCode ^
       habits.hashCode ^
       selectedQuotesCategories.hashCode ^
-      selectedTheme.hashCode;
+      selectedTheme.hashCode ^
+      maxStreak.hashCode ^
+      currentStreak.hashCode;
   }
 }

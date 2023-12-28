@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:habitpal_project/core/utils.dart';
 import 'package:habitpal_project/utils/color_utils.dart';
 import 'package:habitpal_project/widgets/Text_Fields.dart';
 import 'package:habitpal_project/widgets/UI_Buttons.dart';
@@ -23,7 +24,7 @@ class _LogInScreenState extends ConsumerState<LogInScreen> {
   late final PasswordField passwordField = PasswordField(controller: _passwordTextController, labelText: "Password",);
 
   @override
-  Widget build(BuildContext context) { //vid mein yahan (BuildContext context, WidgetRef ref) daala tha
+  Widget build(BuildContext context) {
     //final isLoading = ref.watch(authControllerProvider);
     return Scaffold(
       body: Container( //body: isLoading ? const Loader() : Container(
@@ -75,17 +76,15 @@ class _LogInScreenState extends ConsumerState<LogInScreen> {
                       Expanded(
                         child: reusableUIButton(
                           context, "Log In", 250, () async {
+
                             try {
                               ref.read(authControllerProvider.notifier).signInWithEmail(
                                 context,
                                 _emailTextController.text,
                                 _passwordTextController.text,
                               );
-                              // print("Signed In Successfully");
-                              // // Navigate to the home screen or perform other actions on successful sign-in
-                              // Navigator.push(context, MaterialPageRoute(builder: ((context) => const Home())));
                             } catch (e) {
-                              print("Error: $e");
+                              showSnackBar(context, e.toString());
                             }
                           }
                         ),

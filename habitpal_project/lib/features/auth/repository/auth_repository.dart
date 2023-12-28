@@ -66,7 +66,9 @@ class AuthRepository {
           username: userCredential.user!.displayName??"John Doe", 
           habits: [], 
           selectedQuotesCategories: ["Exploring", "Kindness", "Listening", "Giving", "Optimism", "Resilience", "Helping"],
-          selectedTheme: "Original"
+          selectedTheme: "Original",
+          maxStreak: 0,
+          currentStreak: 0,
         );
         // Map new user
         _users.doc(userCredential.user!.uid).set(userModel.toMap());
@@ -104,6 +106,8 @@ class AuthRepository {
         habits: [],
         selectedQuotesCategories: ["Exploring", "Kindness", "Listening", "Giving", "Optimism", "Resilience", "Helping"],
         selectedTheme: "Original",
+        maxStreak: 0,
+        currentStreak: 0,
       );
       // Add the user model to Firestore
       _users.doc(userCredential.user!.uid).set(userModel.toMap());
@@ -136,11 +140,17 @@ class AuthRepository {
 
       return right(userModel); // Return the user model on success
     } on FirebaseException catch (e) {
-      if (e.code == 'user-not-found' || e.code == 'wrong-password') {
+      if (e.code == 'user-not-found') {
         // If the user is not found or the password is wrong, return a failure with a custom message
+        return left(Failure("User not found. Please try again."));
+      }
+      else if (e.code == 'wrong-password') {
         return left(Failure("Invalid email or password. Please try again."));
       }
-      throw e.message!; // Throw an exception with Firebase error message for other cases
+      else{
+        print('Unhandled Firebase Exception: ${e.code} - ${e.message}');
+        throw e.message!; // Throw an exception with Firebase error message for other cases
+      }
     } catch (e) {
       return left(Failure(e.toString())); // Return a failure on other exceptions
     }

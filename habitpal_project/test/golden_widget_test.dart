@@ -36,6 +36,8 @@ final mockUserData = UserModel(
         "Helping",
       ],
       selectedTheme: "Original",
+      maxStreak: 0,
+      currentStreak: 0,
     );
 
 final mockQuoteData = QuotesModel(
@@ -236,7 +238,6 @@ void main() {
   testGoldens('HistoryScreen', (tester) async {
 
     final widget = MaterialApp(
-      debugShowCheckedModeBanner: false,
       home: ProviderScope(
         overrides: [userProvider.overrideWithProvider(mockUserProvider)],
         child: History(),

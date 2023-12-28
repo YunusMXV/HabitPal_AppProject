@@ -400,6 +400,147 @@ class HomeRepository {
     }
   }
 
+  FutureEither<List<double>> calculateWeeklyProgress({
+    required List<Habit> habits,
+  }) async {
+    try {
+      // Retrieve the current user model
+      User? user = _auth.currentUser;
+
+      if (user != null) {
+        // Retrieve the current user's document reference
+        DocumentReference userDocRef = _firestore.collection('users').doc(user.uid);
+
+        // Fetch the user document
+        DocumentSnapshot userSnapshot = await userDocRef.get();
+        UserModel userModel = UserModel.fromMap(userSnapshot.data() as Map<String, dynamic>);
+
+        DateTime currentDate = DateTime.now();
+
+        int currentDay = currentDate.weekday;
+
+        //String currentWeekday = _getDayString(currentDay);
+
+        List<double> weeklyProgress = List.generate(7, (index) => 0.0);
+
+        int loop = currentDay == 7 ? 1 : 1 + currentDay;
+
+        // s 1 m 2 t 3 w 4 t 5 f 6 s 7
+        for (int i = loop; i > 0; i--) {
+          int numerator = 0;
+          int denominator = 0;
+
+          for(Habit habit in userModel.habits)
+          {
+            // Check if there is a progress entry for the current date
+            ProgressEntry? progressEntry;
+            try {
+              progressEntry = habit.progressHistory.firstWhere(
+                (entry) => entry.date.year == currentDate.year &&
+                    entry.date.month == currentDate.month &&
+                    entry.date.day == currentDate.day,
+              );
+              if(progressEntry.completed) {
+                numerator += 1;
+                denominator += 1;
+              }
+              else {
+                denominator += 1;
+              }
+            } catch (e) {
+              print("Something Wrong");
+            }
+          }
+          if(denominator != 0){
+            weeklyProgress[i-1] = ((numerator/denominator)*100);
+          }
+          currentDate = currentDate.subtract(const Duration(days: 1));
+        }
+        return right(weeklyProgress);
+      } else {
+        return left(Failure('User not authenticated.'));
+      }
+    } on FirebaseException catch (e) {
+      return left(Failure(e.message!)); // Return a failure with Firebase error message
+    } catch (e) {
+      return left(Failure(e.toString())); // Return a failure with general error message
+    }
+  }
+
+  FutureEither<List<double>> calculateWeeklyTypes({
+    required List<Habit> habits,
+  }) async {
+    try {
+      // Retrieve the current user model
+      User? user = _auth.currentUser;
+
+      if (user != null) {
+        // Retrieve the current user's document reference
+        DocumentReference userDocRef = _firestore.collection('users').doc(user.uid);
+
+        // Fetch the user document
+        DocumentSnapshot userSnapshot = await userDocRef.get();
+        UserModel userModel = UserModel.fromMap(userSnapshot.data() as Map<String, dynamic>);
+
+        // DateTime currentDate = DateTime.now();
+
+        // int currentDay = currentDate.weekday;
+
+        //String currentWeekday = _getDayString(currentDay);
+
+        List<int> categoryProgress = List.generate(9, (index) => 0);
+
+        for(Habit habit in userModel.habits)
+        {
+          switch (habit.category) {
+            case "Physical":
+              categoryProgress[0] = categoryProgress[0] + 1;
+              break;
+            case "Mental":
+              categoryProgress[1] = categoryProgress[1] + 1;
+              break;
+            case "Productivity":
+              categoryProgress[2] = categoryProgress[2] + 1;
+              break;
+            case "Social":
+              categoryProgress[3] = categoryProgress[3] + 1;
+              break;
+            case "Creativity":
+              categoryProgress[4] = categoryProgress[4] + 1;
+              break;
+            case "Financial":
+              categoryProgress[5] = categoryProgress[5] + 1;
+              break;
+            case "Spiritual":
+              categoryProgress[6] = categoryProgress[6] + 1;
+              break;
+            case "Passion":
+              categoryProgress[7] = categoryProgress[7] + 1;
+              break;
+            case "Personal":
+              categoryProgress[8] = categoryProgress[8] + 1;
+              break;
+            default:
+          }
+        }
+
+      List<double> resultList = divideListByNumber(categoryProgress, userModel.habits.length.toDouble());
+
+        return right(resultList);
+      } else {
+        return left(Failure('User not authenticated.'));
+      }
+    } on FirebaseException catch (e) {
+      return left(Failure(e.message!)); // Return a failure with Firebase error message
+    } catch (e) {
+      return left(Failure(e.toString())); // Return a failure with general error message
+    }
+  }
+
+  List<double> divideListByNumber(List<int> originalList, double divisor) {
+    return originalList.map((int number) => number / divisor).toList();
+  }
+
 
 
   // Method to get user data from Firestore using the user ID

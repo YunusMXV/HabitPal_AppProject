@@ -74,7 +74,7 @@ class AuthController extends StateNotifier<bool> {
       // If sign-up succeeds, update the user state using Riverpod
       (userModel) {
        // _ref.read(userProvider.notifier).update((state) => userModel);
-        Navigator.pop(context);
+       // Navigator.pop(context);
       },
     );
   }

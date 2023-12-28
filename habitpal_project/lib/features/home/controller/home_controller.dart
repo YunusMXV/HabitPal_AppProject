@@ -16,6 +16,9 @@ final progressHistoryProvider = StateProvider<ProgressEntry?>((ref) => null);
 
 final dateHistoryProvider = StateProvider<DateTime?>((ref) => DateTime.now());
 
+final weeklyProgressProvider = StateProvider<List<double>>((ref) => [0.0,0.0,0.0,0.0,0.0,0.0,0.0]);
+
+final categoryProgressProvider = StateProvider<List<double>>((ref) => [0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0]);
 
 // State notifier provider allows to read and modify state
 // <AuthController, bool> type of state managed is bool and AuthController will control this state
@@ -52,6 +55,39 @@ class HomeController extends StateNotifier<bool> {
       (l) => showSnackBar(context, l.message),
       // If reset password succeeds, update the user state using Riverpod
       (quotesModel) => _ref.read(quoteProvider.notifier).update((state) => quotesModel),
+    );
+  }
+
+  void calculateWeeklyProgress(BuildContext context, List<Habit> habits) async {
+    state = true;
+
+    final calculation = await _homeRepository.calculateWeeklyProgress(
+      habits: habits,
+    );
+    state = false;
+
+    calculation.fold(
+      // If reset password fails, show a snackbar with the error message
+      (l) => showSnackBar(context, l.message),
+      // If reset password succeeds, update the user state using Riverpod
+      (weeklyProgress) => _ref.read(weeklyProgressProvider.notifier).update((state) => weeklyProgress),
+    );
+  }
+
+  void calculateWeeklyTypes(BuildContext context, List<Habit> habits) async {
+    state = true;
+
+    final calculation = await _homeRepository.calculateWeeklyTypes(
+      habits: habits,
+    );
+
+    state = false;
+
+    calculation.fold(
+      // If reset password fails, show a snackbar with the error message
+      (l) => showSnackBar(context, l.message),
+      // If reset password succeeds, update the user state using Riverpod
+      (categoryProgress) => _ref.read(categoryProgressProvider.notifier).update((state) => categoryProgress),
     );
   }
 

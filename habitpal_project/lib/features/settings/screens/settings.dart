@@ -47,10 +47,7 @@ class _SettingsState extends ConsumerState<Settings> {
         centerTitle: true,
         leading: IconButton(
           onPressed: () {
-            final currentRoute = Routemaster.of(context).currentRoute;
-            print(currentRoute);
             Routemaster.of(context).pop();
-            print(currentRoute);
           },
           icon: const Icon(Icons.arrow_back, color: Colors.white,),
         ),

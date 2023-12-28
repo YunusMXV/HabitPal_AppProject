@@ -1,10 +1,12 @@
 import 'package:flutter/material.dart';
+import 'package:habitpal_project/features/history/screens/history_view.dart';
 import 'package:habitpal_project/features/home/controller/home_controller.dart';
 import 'package:intl/intl.dart'; // Import for DateFormat
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:habitpal_project/features/auth/controller/auth_controller.dart';
 import 'package:habitpal_project/model/habit_model.dart';
 import 'package:ionicons/ionicons.dart';
+import 'package:routemaster/routemaster.dart';
 
 class HistoryTile extends ConsumerStatefulWidget {
   const HistoryTile({super.key});
@@ -43,9 +45,11 @@ class _HistoryTileState extends ConsumerState<HistoryTile> {
       itemCount: user!.habits.length,
       itemBuilder: (context, index) {
         final habit = user.habits[index];
-
+    //     print("selected date: $selectedDate");
+    // print("first progress date: ${habit.progressHistory[0].date}");
+    // print(habit.targetCompletionDays.contains(currentDay) && habit.progressHistory[0].date.isBefore(selectedDate));
         // Check if the current day is in the habit's completion days
-        if (habit.targetCompletionDays.contains(currentDay)) {
+        if (habit.targetCompletionDays.contains(currentDay) && (habit.progressHistory[0].date.isBefore(selectedDate) || habit.progressHistory[0].date.isAtSameMomentAs(selectedDate))) {
           var selectedProgress = habit.progressHistory.where((progress) {
             return progress.date.year == selectedDate.year &&
                 progress.date.month == selectedDate.month &&
@@ -87,17 +91,17 @@ class _HistoryTileState extends ConsumerState<HistoryTile> {
                 ),
               ),
               onTap: () async {
-                // ref.read(habitProvider.notifier).update((state) => habit);
-                // Map<String, dynamic>? habitInfo = await showDialog(
-                //   context: context,
-                //   barrierDismissible: true,
-                //   builder: (context) => PopScope(
-                //     onPopInvoked: (canPop) async {
-                //       Routemaster.of(context).pop();
-                //     },
-                //     child: const EditHabitDialog(),
-                //   ),
-                // );
+                ref.read(habitProvider.notifier).update((state) => habit);
+                Map<String, dynamic>? habitInfo = await showDialog(
+                  context: context,
+                  barrierDismissible: true,
+                  builder: (context) => PopScope(
+                    onPopInvoked: (canPop) async {
+                      Routemaster.of(context).pop();
+                    },
+                    child: const HistoryHabitDialog(),
+                  ),
+                );
               },
             ),
           );
