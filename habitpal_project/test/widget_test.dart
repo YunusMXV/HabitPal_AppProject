@@ -1,10 +1,8 @@
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:golden_toolkit/golden_toolkit.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:habitpal_project/features/achievements/screens/achievement.dart';
 import 'package:habitpal_project/features/auth/controller/auth_controller.dart';
 import 'package:habitpal_project/features/auth/screens/forgot_password.dart';
 import 'package:habitpal_project/features/auth/screens/login.dart';
@@ -23,37 +21,35 @@ import 'package:habitpal_project/widgets/auth/google_sign_in.dart';
 import 'MockFirebaseAuth.dart';
 // Replace with the actual path to your LogInScreen widget
 
-
 final mockUserData = UserModel(
-      uid: "kpf2vjJud9ejks1rWZvdXOZ4AUj2",
-      email: "yunus123@gmail.com",
-      username: "Yunus123",
-      habits: [],
-      selectedQuotesCategories: [
-        "Exploring",
-        "Kindness",
-        "Listening",
-        "Giving",
-        "Optimism",
-        "Resilience",
-        "Helping",
-      ],
-      selectedTheme: "Original",
-      maxStreak: 0,
-      currentStreak: 0,
-    );
+  uid: "kpf2vjJud9ejks1rWZvdXOZ4AUj2",
+  email: "yunus123@gmail.com",
+  username: "Yunus123",
+  habits: [],
+  selectedQuotesCategories: [
+    "Exploring",
+    "Kindness",
+    "Listening",
+    "Giving",
+    "Optimism",
+    "Resilience",
+    "Helping",
+  ],
+  selectedTheme: "Original",
+  maxStreak: 0,
+  currentStreak: 0,
+);
 
 final mockQuoteData = QuotesModel(
-  uid: "w57gB9X3e654V16nW28fJ0k0l2gB", 
-  description: "You have to create your life. You have to carve it, like a sculpture.", 
-  type: "Exploring"
-);
+    uid: "w57gB9X3e654V16nW28fJ0k0l2gB",
+    description:
+        "You have to create your life. You have to carve it, like a sculpture.",
+    type: "Exploring");
 final mockUserProvider = StateProvider<UserModel?>((ref) => mockUserData);
 
 final mockQuoteProvider = StateProvider<QuotesModel?>((ref) => mockQuoteData);
 
 void main() {
-
   setupFirebaseAuthMocks();
 
   // Set up Firebase mocks
@@ -61,7 +57,7 @@ void main() {
     await Firebase.initializeApp();
     await loadAppFonts();
   });
-  
+
   group(
     "Login Screen Test",
     () {
@@ -147,7 +143,7 @@ void main() {
     testWidgets('Settings Widget Test', (WidgetTester tester) async {
       // Build our app and trigger a frame.
       await tester.pumpWidget(MaterialApp(
-      home: ProviderScope(
+          home: ProviderScope(
         overrides: [userProvider.overrideWithProvider(mockUserProvider)],
         child: ChangeUsername(),
       )));
@@ -157,6 +153,118 @@ void main() {
       expect(find.text('New Username'), findsOneWidget);
       expect(find.text('Confirm'), findsOneWidget);
     });
-    
+  });
+
+  group("Change Email", () {
+    testWidgets('Change Email Widget Test', (WidgetTester tester) async {
+      // Build our app and trigger a frame.
+      await tester.pumpWidget(MaterialApp(
+          home: ProviderScope(
+        overrides: [userProvider.overrideWithProvider(mockUserProvider)],
+        child: const ChangeEmail(),
+      )));
+
+      // Verify the existence of certain widgets
+      expect(find.text('Old Password'), findsOneWidget);
+      expect(find.text('New Email'), findsOneWidget);
+      expect(find.text('Confirm'), findsOneWidget);
+    });
+  });
+
+  group("Change Password", () {
+    testWidgets('Change Password Widget Test', (WidgetTester tester) async {
+      // Build our app and trigger a frame.
+      await tester.pumpWidget(MaterialApp(
+          home: ProviderScope(
+        overrides: [userProvider.overrideWithProvider(mockUserProvider)],
+        child: const ChangePassword(),
+      )));
+
+      // Verify the existence of certain widgets
+      expect(find.text('Old Password'), findsOneWidget);
+      expect(find.text('New Password'), findsOneWidget);
+      expect(find.text('Confirm'), findsOneWidget);
+    });
+  });
+
+  group("Change Preferences", () {
+    testWidgets('Change Preferences Widget Test', (WidgetTester tester) async {
+      // Build our app and trigger a frame.
+      await tester.pumpWidget(MaterialApp(
+          home: ProviderScope(
+        overrides: [userProvider.overrideWithProvider(mockUserProvider)],
+        child: const ChangePreferences(),
+      )));
+
+      // Verify the existence of certain widgets
+      expect(find.text('Change Preferences'), findsOneWidget);
+      expect(find.text('Choose Motivational Quote Types'), findsOneWidget);
+      expect(find.text("Exploring"), findsOneWidget);
+      expect(find.text("Kindness"), findsOneWidget);
+      expect(find.text("Listening"), findsOneWidget);
+      expect(find.text("Giving"), findsOneWidget);
+      expect(find.text("Optimism"), findsOneWidget);
+      expect(find.text("Resilience"), findsOneWidget);
+      expect(find.text("Helping"), findsOneWidget);
+      expect(find.text("Select Theme"), findsOneWidget);
+      expect(find.text("Original"), findsOneWidget);
+      expect(find.text("Natural"), findsOneWidget);
+      expect(find.text("Dark"), findsOneWidget);
+      expect(find.text("Set Reminders"), findsOneWidget);
+      expect(find.text('Confirm'), findsOneWidget);
+    });
+  });
+
+  group("Complete Settings", () {
+    testWidgets('Settings Widget Test', (WidgetTester tester) async {
+      // Build our app and trigger a frame.
+      await tester.pumpWidget(MaterialApp(
+          home: ProviderScope(
+        overrides: [userProvider.overrideWithProvider(mockUserProvider)],
+        child: const Settings(),
+      )));
+
+      // Verify the existence of certain widgets
+      expect(find.text('Settings'), findsOneWidget);
+      expect(find.text('Change Username'), findsOneWidget);
+      expect(find.text('Change Email'), findsOneWidget);
+      expect(find.text('Change Password'), findsOneWidget);
+      expect(find.text('Preferences'), findsOneWidget);
+      expect(find.text('Log Out'), findsOneWidget);
+    });
+  });
+
+  group("Home Screen", () {
+    testWidgets('Home Widget Test', (WidgetTester tester) async {
+      // Build our app and trigger a frame.
+      await tester.pumpWidget(MaterialApp(
+          home: ProviderScope(
+        overrides: [
+          userProvider.overrideWithProvider(mockUserProvider),
+          quoteProvider.overrideWithProvider(mockQuoteProvider)
+        ],
+        child: const Home(),
+      )));
+
+      expect(find.text("Create A New Habit"), findsOneWidget);
+
+      expect(find.byIcon(Icons.settings), findsOneWidget);
+      expect(find.byIcon(Icons.history), findsOneWidget);
+      expect(find.byIcon(Icons.rocket), findsOneWidget);
+    });
+  });
+
+  group("History", () {
+    testWidgets('History Widget Test', (WidgetTester tester) async {
+      // Build our app and trigger a frame.
+      await tester.pumpWidget(MaterialApp(
+          home: ProviderScope(
+        overrides: [userProvider.overrideWithProvider(mockUserProvider)],
+        child: const History(),
+      )));
+
+      expect(find.text("History"), findsOneWidget);
+      expect(find.byIcon(Icons.settings), findsOneWidget);
+    });
   });
 }
