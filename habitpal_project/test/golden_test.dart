@@ -45,9 +45,18 @@ final mockQuoteData = QuotesModel(
   description: "You have to create your life. You have to carve it, like a sculpture.", 
   type: "Exploring"
 );
+
+final weeklyProgressData = [0.0,0.0,0.0,0.0,0.0,0.0,0.0];
+
+final categoryTypeData = [0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0];
+
 final mockUserProvider = StateProvider<UserModel?>((ref) => mockUserData);
 
 final mockQuoteProvider = StateProvider<QuotesModel?>((ref) => mockQuoteData);
+
+final mockweeklyProgressProvider = StateProvider<List<double>>((ref) => weeklyProgressData);
+
+final mockcategoryProgressProvider = StateProvider<List<double>>((ref) => categoryTypeData);
 
 
 void main() {
@@ -199,7 +208,11 @@ void main() {
     final widget = MaterialApp(
       debugShowCheckedModeBanner: false,
       home: ProviderScope(
-        overrides: [userProvider.overrideWithProvider(mockUserProvider)],
+        overrides: [
+          userProvider.overrideWithProvider(mockUserProvider),
+          weeklyProgressProvider.overrideWithProvider(mockweeklyProgressProvider),
+          categoryProgressProvider.overrideWithProvider(categoryProgressProvider),
+        ],
         child: Achievement(),
       ),
     );

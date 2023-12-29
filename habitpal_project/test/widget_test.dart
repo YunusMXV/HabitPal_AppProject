@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:golden_toolkit/golden_toolkit.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:habitpal_project/features/achievements/screens/Achievement.dart';
 import 'package:habitpal_project/features/auth/controller/auth_controller.dart';
 import 'package:habitpal_project/features/auth/screens/forgot_password.dart';
 import 'package:habitpal_project/features/auth/screens/login.dart';
@@ -22,32 +23,41 @@ import 'MockFirebaseAuth.dart';
 // Replace with the actual path to your LogInScreen widget
 
 final mockUserData = UserModel(
-  uid: "kpf2vjJud9ejks1rWZvdXOZ4AUj2",
-  email: "yunus123@gmail.com",
-  username: "Yunus123",
-  habits: [],
-  selectedQuotesCategories: [
-    "Exploring",
-    "Kindness",
-    "Listening",
-    "Giving",
-    "Optimism",
-    "Resilience",
-    "Helping",
-  ],
-  selectedTheme: "Original",
-  maxStreak: 0,
-  currentStreak: 0,
-);
+      uid: "kpf2vjJud9ejks1rWZvdXOZ4AUj2",
+      email: "yunus123@gmail.com",
+      username: "Yunus123",
+      habits: [],
+      selectedQuotesCategories: [
+        "Exploring",
+        "Kindness",
+        "Listening",
+        "Giving",
+        "Optimism",
+        "Resilience",
+        "Helping",
+      ],
+      selectedTheme: "Original",
+      maxStreak: 0,
+      currentStreak: 0,
+    );
 
 final mockQuoteData = QuotesModel(
-    uid: "w57gB9X3e654V16nW28fJ0k0l2gB",
-    description:
-        "You have to create your life. You have to carve it, like a sculpture.",
-    type: "Exploring");
+  uid: "w57gB9X3e654V16nW28fJ0k0l2gB", 
+  description: "You have to create your life. You have to carve it, like a sculpture.", 
+  type: "Exploring"
+);
+
+final weeklyProgressData = [0.0,0.0,0.0,0.0,0.0,0.0,0.0];
+
+final categoryTypeData = [0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0];
+
 final mockUserProvider = StateProvider<UserModel?>((ref) => mockUserData);
 
 final mockQuoteProvider = StateProvider<QuotesModel?>((ref) => mockQuoteData);
+
+final mockweeklyProgressProvider = StateProvider<List<double>>((ref) => weeklyProgressData);
+
+final mockcategoryProgressProvider = StateProvider<List<double>>((ref) => categoryTypeData);
 
 void main() {
   setupFirebaseAuthMocks();
@@ -265,6 +275,29 @@ void main() {
 
       expect(find.text("History"), findsOneWidget);
       expect(find.byIcon(Icons.settings), findsOneWidget);
+    });
+  });
+
+  group("Achievements", () {
+    testWidgets('Achievements Widget Test', (WidgetTester tester) async {
+      // Build our app and trigger a frame.
+      await tester.pumpWidget(MaterialApp(
+          home: ProviderScope(
+        overrides: [
+          userProvider.overrideWithProvider(mockUserProvider),
+          weeklyProgressProvider.overrideWithProvider(mockweeklyProgressProvider),
+          categoryProgressProvider.overrideWithProvider(categoryProgressProvider),
+        ],
+        child: const Achievement(),
+      )));
+
+      expect(find.text("Achievements"), findsOneWidget);
+      expect(find.byIcon(Icons.settings), findsOneWidget);
+      expect(find.text("Best Streak"), findsOneWidget);
+      expect(find.text("Current Streak"), findsOneWidget);
+      expect(find.text("Weekly Bar Chart"), findsOneWidget);
+      expect(find.text("Habit Type"), findsOneWidget);
+
     });
   });
 }

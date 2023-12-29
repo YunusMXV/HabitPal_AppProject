@@ -23,14 +23,26 @@ class _AchievementState extends ConsumerState<Achievement> {
     super.initState();
     WidgetsBinding.instance.addPostFrameCallback((_) {
       final hi = ref.read(userProvider);
-      ref.read(homeControllerProvider.notifier).calculateWeeklyProgress(
-        context, 
-        hi!.habits,
-      );
-      ref.read(homeControllerProvider.notifier).calculateWeeklyTypes(
-        context,
-        hi.habits,
-      );
+      if(hi!.habits.isNotEmpty)
+      {
+        ref.read(homeControllerProvider.notifier).calculateWeeklyProgress(
+          context, 
+          hi.habits,
+        );
+        ref.read(homeControllerProvider.notifier).calculateWeeklyTypes(
+          context,
+          hi.habits,
+        );
+        ref.read(homeControllerProvider.notifier).calculateStreak(
+          context, 
+          hi.habits,
+        );
+      }
+      else
+      {
+        ref.read(weeklyProgressProvider.notifier).update((state) => [0.0,0.0,0.0,0.0,0.0,0.0,0.0]);
+        ref.read(categoryProgressProvider.notifier).update((state) => [0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0]);
+      }
     });
   }
 

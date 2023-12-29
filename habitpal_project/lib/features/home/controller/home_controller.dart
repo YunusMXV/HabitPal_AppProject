@@ -91,6 +91,23 @@ class HomeController extends StateNotifier<bool> {
     );
   }
 
+  void calculateStreak(BuildContext context, List<Habit> habits) async {
+    state = true;
+
+    final calculation = await _homeRepository.calculateStreak(
+      habits: habits,
+    );
+
+    state = false;
+
+    calculation.fold(
+      // If reset password fails, show a snackbar with the error message
+      (l) => showSnackBar(context, l.message),
+      // If reset password succeeds, update the user state using Riverpod
+      (streakProgress) => null,
+    );
+  }
+
   void createHabit(BuildContext context, String habitTitle, String description, String category, Set<String> targetCompletionDays, DateTime completionDeadline,) async {
     state = true;
     final user = await _homeRepository.createHabit(

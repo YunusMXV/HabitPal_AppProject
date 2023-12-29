@@ -419,7 +419,6 @@ class HomeRepository {
 
         int currentDay = currentDate.weekday;
 
-        //String currentWeekday = _getDayString(currentDay);
 
         List<double> weeklyProgress = List.generate(7, (index) => 0.0);
 
@@ -467,7 +466,7 @@ class HomeRepository {
     }
   }
 
-  FutureEither<List<double>> calculateWeeklyTypes({
+  FutureVoid calculateStreak({
     required List<Habit> habits,
   }) async {
     try {
@@ -482,11 +481,100 @@ class HomeRepository {
         DocumentSnapshot userSnapshot = await userDocRef.get();
         UserModel userModel = UserModel.fromMap(userSnapshot.data() as Map<String, dynamic>);
 
-        // DateTime currentDate = DateTime.now();
+        DateTime currentDate = DateTime.now();
 
-        // int currentDay = currentDate.weekday;
+        currentDate = currentDate.subtract(const Duration(days: 1));
 
-        //String currentWeekday = _getDayString(currentDay);
+        int streak = 0;
+
+        int leaves = 10;
+
+        bool continues = true;
+
+        while(continues) {
+
+          int numerator = 0;
+          int denominator = 0;
+
+          for(Habit habit in userModel.habits)
+          {
+            ProgressEntry? progressEntry;
+            try {
+              progressEntry = habit.progressHistory.firstWhere(
+                (entry) => entry.date.year == currentDate.year &&
+                    entry.date.month == currentDate.month &&
+                    entry.date.day == currentDate.day,
+              );
+              if(progressEntry.completed) {
+                numerator += 1;
+                denominator += 1;
+              }
+              else {
+                denominator += 1;
+              }
+            } catch (e) {
+              print("Something Wrong");
+            }
+          }
+          if(denominator != 0){
+            leaves = 10;
+            if((numerator/denominator)*100 == 100.0)
+            {
+              streak += 1;
+            }
+            else
+            {
+              continues = false;
+            }
+          }
+          else
+          {
+            leaves -= 1;
+            if(leaves == 0)
+            {
+              continues = false;
+            }
+          }
+          currentDate = currentDate.subtract(const Duration(days: 1));
+        }
+        if(streak > userModel.maxStreak)
+        {
+          await _firestore.collection('users').doc(user.uid).update({
+            'maxStreak': streak,
+            'currentStreak': streak,
+          });
+        }
+        else
+        {
+          await _firestore.collection('users').doc(user.uid).update({
+            'currentStreak': streak,
+          });
+        }
+        return right(null);
+      } else {
+        return left(Failure('User not authenticated.'));
+      }
+    } on FirebaseException catch (e) {
+      return left(Failure(e.message!)); // Return a failure with Firebase error message
+    } catch (e) {
+      return left(Failure(e.toString())); // Return a failure with general error message
+    }
+  }
+
+  FutureEither<List<double>> calculateWeeklyTypes({
+    required List<Habit> habits,
+  }) async {
+    try {
+      // Retrieve the current user model
+      User? user = _auth.currentUser;
+
+      if (user != null) {
+        // Retrieve the current user's document reference
+        DocumentReference userDocRef = _firestore.collection('users').doc(user.uid);
+
+        // Fetch the user document
+        DocumentSnapshot userSnapshot = await userDocRef.get();
+        UserModel userModel = UserModel.fromMap(userSnapshot.data() as Map<String, dynamic>);
 
         List<int> categoryProgress = List.generate(9, (index) => 0);
 
