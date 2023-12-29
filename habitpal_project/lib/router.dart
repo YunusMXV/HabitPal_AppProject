@@ -19,7 +19,7 @@ final loggedOutRoute = RouteMap(routes: {
   '/': (_) => const MaterialPage(child: LogInScreen()),
   '/signup': (_) => const MaterialPage(child: SignUpScreen()),
   '/forgot_password' : (_) => const MaterialPage(child: ResetPassword()),
-  '/settings' : (_) => const MaterialPage(child: Loader()),
+  //'/settings' : (_) => const MaterialPage(child: Loader()),
 });
 
 // LoggedIn

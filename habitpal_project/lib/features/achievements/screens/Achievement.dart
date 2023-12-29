@@ -1,12 +1,12 @@
 import 'package:flutter/material.dart';
-import 'package:habitpal_project/features/achievements/screens/barGraph/bar_graph.dart';
-import 'package:habitpal_project/features/achievements/screens/pieChart/pie_chart.dart';
+import 'package:habitpal_project/widgets/achievement/barGraph/bar_graph.dart';
+import 'package:habitpal_project/widgets/achievement/pieChart/pie_chart.dart';
 import 'package:habitpal_project/features/auth/controller/auth_controller.dart';
 import 'package:habitpal_project/features/home/controller/home_controller.dart';
 import 'package:habitpal_project/utils/gradient_themes.dart';
 import 'package:habitpal_project/widgets/BottomNav.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:habitpal_project/widgets/info_card.dart';
+import 'package:habitpal_project/widgets/achievement/info_card.dart';
 import 'package:routemaster/routemaster.dart';
 
 class Achievement extends ConsumerStatefulWidget {

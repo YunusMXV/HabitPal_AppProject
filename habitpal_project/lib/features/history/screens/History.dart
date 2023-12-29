@@ -4,7 +4,7 @@ import 'package:habitpal_project/features/home/controller/home_controller.dart';
 import 'package:habitpal_project/utils/gradient_themes.dart';
 import 'package:habitpal_project/widgets/BottomNav.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:habitpal_project/widgets/History_Tile.dart';
+import 'package:habitpal_project/widgets/history/History_Tile.dart';
 import 'package:routemaster/routemaster.dart';
 
 class History extends ConsumerStatefulWidget {

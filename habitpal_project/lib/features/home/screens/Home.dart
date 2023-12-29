@@ -2,10 +2,10 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:habitpal_project/features/auth/controller/auth_controller.dart';
 import 'package:habitpal_project/features/home/controller/home_controller.dart';
-import 'package:habitpal_project/features/home/screens/create_habit.dart';
+import 'package:habitpal_project/widgets/home/create_habit.dart';
 import 'package:habitpal_project/widgets/BottomNav.dart';
-import 'package:habitpal_project/widgets/Habit_Tile.dart';
-import 'package:habitpal_project/widgets/UI_Buttons.dart';
+import 'package:habitpal_project/widgets/home/Habit_Tile.dart';
+import 'package:habitpal_project/widgets/auth/UI_Buttons.dart';
 import 'package:routemaster/routemaster.dart';
 import 'package:habitpal_project/utils/gradient_themes.dart';
 

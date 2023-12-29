@@ -1,7 +1,7 @@
 import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:habitpal_project/features/achievements/screens/barGraph/bar_data.dart';
+import 'package:habitpal_project/widgets/achievement/barGraph/bar_data.dart';
 
 class MyBarGraph extends ConsumerWidget {
   final List weeklySummary;

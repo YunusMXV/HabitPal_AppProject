@@ -1,4 +1,4 @@
-import 'package:habitpal_project/features/achievements/screens/barGraph/individual_bar.dart';
+import 'package:habitpal_project/widgets/achievement/barGraph/individual_bar.dart';
 
 class BarData {
   final double sunHabit;

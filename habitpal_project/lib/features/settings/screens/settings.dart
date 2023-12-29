@@ -3,7 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:habitpal_project/features/auth/controller/auth_controller.dart';
 import 'package:habitpal_project/features/home/controller/home_controller.dart';
 import 'package:habitpal_project/utils/gradient_themes.dart';
-import 'package:habitpal_project/widgets/settings_tile.dart';
+import 'package:habitpal_project/widgets/settings/settings_tile.dart';
 import 'package:ionicons/ionicons.dart';
 import 'package:routemaster/routemaster.dart';
 
